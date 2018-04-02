@@ -1,4 +1,5 @@
 import socket
+import Click
 
 CODE_OK = b'200'
 CODE_OK_WARN = b'220'
@@ -10,13 +11,19 @@ CODE_HANDLER_ERR = b'520'
 CODE_PERMISSION = b'530'
 CODE_NO_ROUTER = b'540'
 
+DEBUG = True
+
 class ControlSocket(object):
     '''Operate a remote click by its handlers.
        This class will create a socket connect to the click.'''
 
-    def __init__(self, click = None):
-        # addr = (click.ipaddr, click.controlPort)
-        addr = ('192.168.3.128', 8888)
+    def __init__(self, click:Click.Click):
+        if DEBUG:
+            addr = ('192.168.3.128', 8888)
+        else:
+            self.IPaddr = click.IPaddr
+            self.port = click.controlPort
+            addr = (self.IPaddr,self.port)
         self.con = socket.socket()
         try:
             self.con.connect(addr)

@@ -5,12 +5,12 @@ class Click(object):
     '''A click object, including all the information
        about a remote click'''
     online = False
-    ipaddr = ''
-    controlPort = 8888
-    dataPort = 23232
+    IPaddr = ''
+    controlPort = 11111
+    dataPort = 33333
     ddosservice = ['NAT','UDP','syn flood']
     config = 'default config'
-    configPath = './config'
+    configPath = './config/'
 
     def __init__(self,name,ipaddr,controlPort,dataPort):
         self.ipaddr = ipaddr
