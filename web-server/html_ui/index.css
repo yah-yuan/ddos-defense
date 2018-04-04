@@ -1,0 +1,247 @@
+html{
+    height: 100%;
+}
+body{
+    height: 100%;
+}
+table{
+    border:none;
+    width:100%;
+    text-align: center;
+}
+thead{
+    background-color: #34495e;
+    color: white;
+    font-size:30px;
+}
+tbody>tr:hover{
+    background-color: #1abc9c;
+    color: white;
+}
+
+tbody{
+    
+}
+
+li{
+    display:inline-flex;
+    background-color: #34495e;
+    color: white;
+    padding:0 20px 0 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    outline:none;
+}
+li:hover{
+    background-color: #44617e
+}
+
+.sp:active{
+    background-color: #2b3c4d;
+}
+
+.wrapper{
+    display: flex;
+}
+
+.mb{
+    background-color: #34495e;
+    color: white;
+    padding:5px 20px 5px 20px;
+    border-radius: 5px;
+    border: none;
+    outline:none;
+}
+
+.mb_b,.cb{
+    height: 100%;
+    background-color: #34495e;
+    color: white;
+    padding:5px 20px 5px 20px;
+    border: none;
+    outline:none;
+}
+.cb:hover, .mb_b:hover, .mb:hover{
+    background-color: #44617e;
+}
+.cb:active{
+    background-color: #2b3c4d;
+}
+
+
+
+#source_search{
+    border: none;
+    outline: none;
+    height:100%;
+    width:40%;
+    background-color:#19997f;
+    color:white;
+    border-radius: 10px 0 0 10px;
+    padding:0 0 0 20px;
+    font-size:20px;
+}
+#source_search:focus{
+    background-color:#1abc9c;
+}
+
+#source_search::-webkit-input-placeholder{
+    color:white;
+    font-size:20px;
+    font-weight: bold;
+}
+#search_bar{
+    height:100%;
+    width:85%;
+    display: inline-flex;
+    align-items: center;
+}
+
+#table_wrapper{
+    width:90%;
+    height:85%;
+    background-color:lightcyan;
+    display: flex;
+    border-radius: 10px;
+
+}
+
+#left_wrapper{
+    float:left;
+    height:100%;
+    width:20%;
+    background-color:#34495e;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#right_wrapper{
+    float:right;
+    height:100%;
+    width:80%;
+    background-color: #D1EEEE;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#button_list{
+    width: 80%;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#current_status_wrapper{
+    width: 100%;
+    height: 30%;
+    background-color: #D1EEEE;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+#dashboard_view{
+    height:100%;
+    width:100%;
+    background-color: #D1EEEE;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+#source_view{
+    height:100%;
+    width:100%;
+    display:none;
+    flex-direction: column;
+    align-items: center;
+    display: none;
+}
+
+#strategy_view{
+    height:100%;
+    width:100%;
+    flex-direction: column;
+    align-items: center;
+    display: none;
+}
+
+.list_button{
+    width:100%;
+    margin:10px;
+}
+
+#gauge{
+    height: 150px;
+    width: 150px;
+    color: white;
+    background-color: #1abc9c;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#chart_wrapper{
+    display:flex;
+    height: 70%;
+    width:100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#pie_chart_wrapper{
+    display: none;
+    align-items: center;
+    justify-content: center;
+    height:90%;
+    width:100%;
+    
+}
+
+#view_style{
+    display: inline-flex;
+    width:15%;
+    left:20px;
+    height:100%;
+    justify-content: space-around;
+}
+
+#source_nav{
+    margin-bottom: 2%;
+    margin-top: 2%;
+    margin-left: 5%;
+    margin-right: 5%;
+    height: 6%;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color:#34495e;
+    border-radius: 10px;
+}
+
+#list_wrapper{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height:90%;
+    width:100%;
+}
+
+#view{
+    font-size: 20px;
+    border:none;
+    outline: none;
+    width:100px;
+    height:100%;
+    background-color: #34495e;
+    color:white;
+}
+#view>option{
+    width:100%;
+    height: 30px;
+}
