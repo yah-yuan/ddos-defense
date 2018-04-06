@@ -4,6 +4,7 @@ from Config import ConfigWriter
 class Click(object):
     '''A click object, including all the information
        about a remote click'''
+    main_click = False
     online = False
     IPaddr = ''
     controlPort = 11111
@@ -17,7 +18,19 @@ class Click(object):
         self.controller = ControlSocket(self)
         self.writer = ConfigWriter(self)
         self.datapipe = None
+        self.online = True
+
+    def SetMain(self):
+        self.main_click = True
+        return True
 
     def ChangeConfig(self):
         self.writer.write_new_config(controlPort,ddosservice)
-        self.controller.HotConfig()
+        if self.controller.HotConfig():
+            return True
+        elif:
+            return False
+
+    def CloseClick(self):
+        pass
+        

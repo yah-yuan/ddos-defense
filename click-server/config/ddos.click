@@ -1,10 +1,10 @@
 define($REMOTEIP 192.168.3.1);
 define($IFACENAME ens33);
 CONTROL :: ControlSocket(tcp, 22222);
-DATA :: ControlSocket(tcp, 33333);
 
 out :: Queue(1024) -> ToDevice($IFACENAME);
-FromDevice($IFACENAME)-> is_ip :: Classifier(12/0800, -);
+FromDevice($IFACENAME)->
+LOG :: ToIPSummaryDump(/root/log/testlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto)-> is_ip :: Classifier(12/0800, -);
 is_ip [1] ->Discard; //not ip, so drop
 
 is_ip [0] 

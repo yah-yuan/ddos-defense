@@ -2,7 +2,7 @@ import pymysql
 import socket
 import Click
 
-DEFINE = True
+DEBUG = True
 
 class DataOperator(object):
     port = 0
@@ -10,7 +10,7 @@ class DataOperator(object):
     status = False
 
     def __init__(self,click:Click.Click = ''):
-        if DEFINE:
+        if DEBUG:
             self.port = 33333
             self.IPaddr = '192.168.3.128'
         else:
