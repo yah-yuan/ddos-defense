@@ -1,4 +1,5 @@
 import socket
+import Click
 
 CODE_OK = b'200'
 CODE_OK_WARN = b'220'
@@ -10,13 +11,19 @@ CODE_HANDLER_ERR = b'520'
 CODE_PERMISSION = b'530'
 CODE_NO_ROUTER = b'540'
 
+DEBUG = True
+
 class ControlSocket(object):
     '''Operate a remote click by its handlers.
        This class will create a socket connect to the click.'''
 
-    def __init__(self, click = None):
-        # addr = (click.ipaddr, click.controlPort)
-        addr = ('192.168.3.128', 8888)
+    def __init__(self, click:Click):
+        if DEBUG:
+            addr = ('192.168.3.128', 22222)
+        else:
+            self.IPaddr = click.IPaddr
+            self.port = click.controlPort
+            addr = (self.IPaddr,self.port)
         self.con = socket.socket()
         try:
             self.con.connect(addr)
@@ -29,9 +36,9 @@ class ControlSocket(object):
             pass
         else:
             raise ControlSocketError('Remote click ERROR')
-        self.con.send(b'READ config\n')
-        recv = self.con.recv(51231)
-        print(recv.decode('utf8'))
+        # self.con.send(b'READ config\n')
+        # recv = self.con.recv(51231)
+        # print(recv.decode('utf8'))
 
     def HotConfig(self, configfile):
         '''Hot swap the config of the remote click device,
@@ -85,6 +92,12 @@ class ControlSocket(object):
             print('Connect is closed successfully')
         else:
             print('Connect is closed successfully')
+    
+    def WriteHandler(self, name:'[element:]handler',args = ''):
+        '''使用任意的handler'''
+        self.con.send(b'WRITE '+ name.encode('utf8'))
+        recvMessage = self.con.recv(65535)
+        print(recvMessage)
 
 class ControlSocketError(Exception):
     def __init__(self,e):
@@ -96,5 +109,5 @@ class ControlSocketError(Exception):
         return self.value
 
 if __name__ == '__main__':
-    con = ControlSocket()
-    
+    con = ControlSocket('')
+    con.WriteHandler('LOG.flush\n')

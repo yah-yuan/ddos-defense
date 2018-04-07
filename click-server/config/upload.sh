@@ -1,0 +1,1 @@
+scp /home/yahweh/ddos-defense/click-server/config/init_sub.click root@192.168.3.135:/root/config
