@@ -1,6 +1,8 @@
 from ControlSocket import ControlSocket
 from Config import ConfigWriter
 
+DEBUG = True
+
 class Click(object):
     '''A click object, including all the information
        about a remote click'''
@@ -13,24 +15,32 @@ class Click(object):
     config = 'default config'
     configPath = './config/'
 
-    def __init__(self,name,ipaddr,controlPort,dataPort):
+    def __init__(self,name,ipaddr,controlPort = 22222,dataPort = 33333):
+        if name == 'main_click':
+            self.main_click = True
+        if DEBUG == True:
+            ipaddr = '192.168.3.135'
         self.ipaddr = ipaddr
         self.controller = ControlSocket(self)
         self.writer = ConfigWriter(self)
         self.datapipe = None
         self.online = True
 
-    def SetMain(self):
-        self.main_click = True
-        return True
-
     def ChangeConfig(self):
-        self.writer.write_new_config(controlPort,ddosservice)
-        if self.controller.HotConfig():
-            return True
-        elif:
-            return False
+        if DEBUG:
+            self.controller.HotConfig('config/ddos.click')
+            self.controller.Close()
+        # path = self.writer.write_new_config(controlPort,ddosservice)
+        # if self.controller.HotConfig(path):
+        #     return False
+        # elif:
+        #     return False
+        # self.controller.Close()
 
     def CloseClick(self):
         pass
-        
+
+def main():
+    click = Click('test','192.168.4.130')
+    click.ChangeConfig()
+    

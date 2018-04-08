@@ -1,6 +1,6 @@
 define($REMOTEIP 192.168.3.1);
 define($IFACENAME ens33);
-CONTROL :: ControlSocket(tcp, 22222);
+CONTROL :: ControlSocket(tcp, 22223);
 
 out :: Queue(1024) -> ToDevice($IFACENAME);
 FromDevice($IFACENAME)->
