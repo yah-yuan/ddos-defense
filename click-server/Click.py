@@ -17,7 +17,7 @@ class Click(object):
         if name == 'main_click':
             self.main_click = True
         if DEBUG:
-            ipaddr = '192.168.3.135'
+            ipaddr = '192.168.3.136'
         self.IPaddr = ipaddr
         self.controlPort = controlPort
         self.dataPort = dataPort
@@ -27,15 +27,15 @@ class Click(object):
         self.online = True
 
     def ChangeConfig(self):
-        if DEBUG:
-            self.controller.HotConfig('config/ddos.click',22223)
-            self.controller.Close()
-        # path = self.writer.write_new_config(controlPort,ddosservice)
-        # if self.controller.HotConfig(path):
-        #     return False
-        # elif:
-        #     return False
-        # self.controller.Close()
+        # if DEBUG:
+        #     self.controller.HotConfig('config/ddos.click',22223)
+        #     self.controller.Close()
+        path = self.writer.NewConfig()
+        if self.controller.HotConfig(path):
+            return False
+        elif:
+            return False
+        self.controller.Close()
 
     def CloseClick(self):
         pass
