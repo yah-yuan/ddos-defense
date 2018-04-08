@@ -9,8 +9,6 @@ class Click(object):
     main_click = False
     online = False
     IPaddr = ''
-    controlPort = 11111
-    dataPort = 33333
     ddosservice = ['NAT','UDP','syn flood']
     config = 'default config'
     configPath = './config/'
@@ -18,9 +16,11 @@ class Click(object):
     def __init__(self,name,ipaddr,controlPort = 22222,dataPort = 33333):
         if name == 'main_click':
             self.main_click = True
-        if DEBUG == True:
+        if DEBUG:
             ipaddr = '192.168.3.135'
-        self.ipaddr = ipaddr
+        self.IPaddr = ipaddr
+        self.controlPort = controlPort
+        self.dataPort = dataPort
         self.controller = ControlSocket(self)
         self.writer = ConfigWriter(self)
         self.datapipe = None
@@ -28,7 +28,7 @@ class Click(object):
 
     def ChangeConfig(self):
         if DEBUG:
-            self.controller.HotConfig('config/ddos.click')
+            self.controller.HotConfig('config/ddos.click',22223)
             self.controller.Close()
         # path = self.writer.write_new_config(controlPort,ddosservice)
         # if self.controller.HotConfig(path):
@@ -44,3 +44,5 @@ def main():
     click = Click('test','192.168.4.130')
     click.ChangeConfig()
     
+if __name__ == '__main__':
+    main()

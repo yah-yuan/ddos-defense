@@ -1,6 +1,5 @@
 import pymysql
 import socket
-import Click
 
 DEBUG = True
 

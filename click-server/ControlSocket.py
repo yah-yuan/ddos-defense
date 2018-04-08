@@ -1,5 +1,4 @@
 import socket
-import Click
 
 CODE_OK = b'200'
 CODE_OK_WARN = b'220'
@@ -17,30 +16,26 @@ class ControlSocket(object):
     '''Operate a remote click by its handlers.
        This class will create a socket connect to the click.'''
 
-    def __init__(self, click:Click):
-        if DEBUG:
-            addr = ('192.168.3.128', 22222)
-        else:
-            self.IPaddr = click.IPaddr
-            self.port = click.controlPort
-            addr = (self.IPaddr,self.port)
+    def __init__(self, click):
+        self.IPaddr = click.IPaddr
+        self.port = click.controlPort
+        addr = (self.IPaddr,self.port)
         self.con = socket.socket()
         try:
             self.con.connect(addr)
         except ConnectionRefusedError as e:
             raise ControlSocketError('remote click is currently not online')
         recvMessage = self.con.recv(1024)
-        print(recvMessage)
+        print(recvMessage.decode('utf8'))
         if b'Click::ControlSocket/1.3' in recvMessage:
-            # return self
-            pass
+            return None
         else:
             raise ControlSocketError('Remote click ERROR')
         # self.con.send(b'READ config\n')
         # recv = self.con.recv(51231)
         # print(recv.decode('utf8'))
 
-    def HotConfig(self, configfile):
+    def HotConfig(self, configfile, newPort):
         '''Hot swap the config of the remote click device,
            only when -R param is usable and the new click file can
            be initialed correctly.'''
@@ -75,6 +70,19 @@ class ControlSocket(object):
             raise ControlSocketError(recvMessage.decode('utf8'))
         else:
             print('Hot-swap succeed')
+
+        self.NewConnect(newPort)
+
+    def NewConnect(self,newPort):
+        addr = (self.IPaddr, newPort)
+        self.con = socket.socket()
+        try:
+            self.con.connect(addr)
+        except ConnectionRefusedError as e:
+            raise ControlSocketError('remote click is currently not online')
+        print('新connect连接至',newPort)
+        self.port = newPort
+
     
     def Close(self):
         '''Close this control socket'''
