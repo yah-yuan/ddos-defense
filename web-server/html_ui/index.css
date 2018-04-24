@@ -23,7 +23,7 @@ tbody{
     
 }
 
-li{
+#pagination li{
     display:inline-flex;
     background-color: #34495e;
     color: white;
@@ -33,7 +33,7 @@ li{
     user-select: none;
     outline:none;
 }
-li:hover{
+#pagination li:hover{
     background-color: #44617e
 }
 
@@ -75,7 +75,7 @@ li:hover{
     border: none;
     outline: none;
     height:100%;
-    width:40%;
+    width: 10em;
     background-color:#19997f;
     color:white;
     border-radius: 10px 0 0 10px;
@@ -168,6 +168,15 @@ li:hover{
     display: none;
 }
 
+#click_manage_view{
+    height:100%;
+    width:100%;
+    display:none;
+    flex-direction: column;
+    align-items: center;
+    display: none;
+}
+
 .list_button{
     width:100%;
     margin:10px;
@@ -210,7 +219,7 @@ li:hover{
     justify-content: space-around;
 }
 
-#source_nav{
+.source_nav{
     margin-bottom: 2%;
     margin-top: 2%;
     margin-left: 5%;
@@ -222,7 +231,14 @@ li:hover{
     align-items: center;
     background-color:#34495e;
     border-radius: 10px;
+    color:white
+
 }
+.source_nav>div{
+    display:inline-flex;
+    align-items: center;
+}
+
 
 #list_wrapper{
     display: flex;
@@ -241,7 +257,29 @@ li:hover{
     background-color: #34495e;
     color:white;
 }
-#view>option{
-    width:100%;
-    height: 30px;
+
+
+.pull{
+    display:flex;
+    align-items: center;
+    position: relative;
+}
+.pull_list{
+    display: none;
+    padding: 10px;
+    position: absolute;
+    top: 100%;
+}
+.list_item{
+    padding:5px 10px 5px 10px;
+    cursor: pointer;
+}
+.pull:hover .pull_list{
+    display: flex;
+    flex-direction: column;
+}
+
+.pull_list>.list_item:hover{
+    background-color: #1abc9c;
+
 }

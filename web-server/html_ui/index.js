@@ -1,5 +1,5 @@
 ////////////////////
-//Main chart
+//main 流量 chart
 ////////////////////
 var chart_status = false;
 var mychart = echarts.init(document.getElementById('chart'), 'macarons');
@@ -72,12 +72,13 @@ function chart_switch(){
     chart_status = false
 }
 
-////////////////////
-// Change view
-///////////////////
+/////////////////////////
+// Change view function
+////////////////////////
 dashboard_view = document.getElementById('dashboard_view');
 source_view = document.getElementById('source_view');
 strategy_view = document.getElementById('strategy_view');
+click_manage_view = document.getElementById('click_manage_view');
 current_view = dashboard_view;
 function show_dashboard(){
     if(current_view != dashboard_view){
@@ -103,7 +104,14 @@ function show_strategy(){
         //mychart.resize();
     }
 }
-
+function show_click_manager(){
+    if(current_view != click_manage_view){
+        current_view.style.display = 'none';
+        current_view = click_manage_view;
+        current_view.style.display = 'flex';
+        //mychart.resize();
+    }
+}
 /////////////////////////
 // Source pie chart
 ////////////////////////
@@ -159,9 +167,9 @@ window.onresize = function(){
 };
 
 
-/////////////////////////
-//change view style
-/////////////////////////
+////////////////////////////
+//change Source view style
+///////////////////////////
 var view_style_pie = document.getElementById('pie_chart_wrapper');
 var view_style_list = document.getElementById('list_wrapper');
 var current_view_style = view_style_list;

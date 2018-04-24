@@ -23,6 +23,10 @@
         <button class="list_button btn btn-hg btn-primary" onclick="show_strategy()">
             Strategy
         </button>
+
+        <button class="list_button btn btn-hg btn-primary" onclick="show_click_manager()">
+            click
+        </button>
       </div>
     </div>
     <div id="right_wrapper" >
@@ -52,7 +56,7 @@
         </div>
       </div>
       <div id="source_view">
-          <div id="source_nav">
+          <div class="source_nav">
               <div id="search_bar">
                 <input id = "source_search" type="text" placeholder="search">
                 <button class="cb">搜索</button>
@@ -129,6 +133,54 @@
           </div>
         </div>
       <div id="strategy_view">
+          <div class="source_nav">
+            <div style="height:100%;">
+              <div style="margin:0 10px 0 20px">
+                <span style="cursor: default;">当前策略</span>
+              </div>
+              <div style="position: relative;height:100%;margin:0px 10px 0px 10px" class="pull">
+                <span style="cursor: default;">default</span>
+                <div style="position: absolute;background-color: #34495e" class="pull_list">
+                  <div class="list_item">strategy1</div>
+                  <div class="list_item">strategy2</div>
+                  <div class="list_item">strategy3</div>
+                </div>
+              </div>
+            </div>
+            <div style="height: 100%; margin:0px 20px 0px 10px">
+              <span style="margin-right: 10px">编辑</span>
+              <span style="margin-left: 10px">保存</span>
+            </div>
+          </div>
+          <div id="strategy editor" style="height:90%;width:90%">
+            <textarea type="text" style="height: 95%;width: 100%;padding: 0;resize:none;"></textarea>
+          </div>
+      </div>
+      <div id="click_manage_view">
+        <div class="source_nav">
+          <div>
+            <span>Add</span>
+          </div>
+        </div>
+        <div id="table_wrapper">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <thead>
+              <tr>
+                <th>Num</th>
+                <th>Load</th>
+                <th>option</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td>1</td>
+                  <td>50%</td>
+                  <td>cancel</td>
+              </tr>
+             
+              </tbody>
+            </table>
+            </div>
       </div>
     </div>
     
