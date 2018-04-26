@@ -1,8 +1,10 @@
 // ens33 192.168.3.136 00:0c:29:e1:1f:18
 //这是demo的router文件
-out :: Queue(1024) -> ToDevice(ens33)
+out :: IPPrint(out) -> Queue(1024) -> ToDevice(ens33)
 
-FromDevice(ens33) -> 
+FromDevice(ens33)
+  -> IPPrint(all) 
+  -> 
 
 cl :: Classifier(12/0806 20/0001,
                   12/0806 20/0002,
@@ -32,4 +34,4 @@ dt[1] -> ICMPError(192.168.3.136, timeexceeded)
 fr[1] -> ICMPError(192.168.3.136, unreachable, needfrag) 
 //   -> [0]rt;
   -> arpq
-// gio[1] -> ICMPError(192.168.3.1 36, parameterproblem) -> [0]rt;
+gio[1] -> ICMPError(192.168.3.1 36, parameterproblem) -> [0]rt;
