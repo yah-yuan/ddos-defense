@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Control Center</title>
+    
+    <link href="flat-ui.css" rel="stylesheet">
+    <script src="echarts.js"></script>
+    <script src="macarons.js"></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
+  </head>
+  <body style="margin:0px; padding:0" >
+    <div id="left_wrapper">
+      <div id="button_list">
+        <button class="list_button btn btn-hg btn-primary" onclick="show_dashboard()">
+            Dashboard
+        </button>
+            
+        <button class="list_button btn btn-hg btn-primary" onclick="show_source()"> 
+            Source 
+        </button>
+            
+        <button class="list_button btn btn-hg btn-primary" onclick="show_strategy()">
+            Strategy
+        </button>
+
+        <button class="list_button btn btn-hg btn-primary" onclick="show_click_manager()">
+            click
+        </button>
+      </div>
+    </div>
+    <div id="right_wrapper" >
+      <div id = "dashboard_view">
+        <div id="current_status_wrapper">
+            <div id = "gauge">
+              <div id = "align" style="display:flex; align-items:baseline">
+                <span id = "current_speed" style="font-size:40px">15</span>
+                <span id = "current_speed_unit"style="font-size:15px">Mbps/s</span>
+              </div>
+            </div>
+            <div id = "info">
+              
+            </div>
+        </div>
+        <div id="chart_wrapper">
+            <div id="option">
+                <button class="mb">年</button>
+                <button class="mb">月</button>
+                <button class="mb">日</button>
+                <button class="mb">时</button>
+                <button class="mb">分</button>
+                <button class="mb">秒</button>
+              </div>
+            <div id="chart" style="height:80%; width:100%;" ondblclick='chart_switch()'>
+          </div>
+        </div>
+      </div>
+      <div id="source_view">
+          <div class="source_nav">
+              <div id="search_bar">
+                <input id = "source_search" type="text" placeholder="search">
+                <button class="cb">搜索</button>
+              </div>
+              <div id="view_style">
+                  <form style="width:80%;height:100%">
+                      <select id="view" onchange="change_view_style(this)">
+                      <option value="Form">Form</option>
+                      <option value="Pie">Pie</option>
+                      </select>
+                  </form>
+              </div>
+          </div>
+          <div id="pie_chart_wrapper" class = "wrapper">
+            <div id="pie_chart" style="height:100%;width:100%">
+            </div>
+          </div>
+          <div id="list_wrapper">
+            <div id="table_wrapper">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <thead>
+              <tr>
+                <th>Source</th>
+                <th>Type</th>
+                <th>Speed</th>
+                <th>strategy</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td>210.42.121.241</td>
+                  <td>TCP</td>
+                  <td>5Mbps/s</td>
+                  <td>discard</td>
+              </tr>
+              <tr>
+                  <td>210.42.121.241</td>
+                  <td>TCP</td>
+                  <td>5Mbps/s</td>
+                  <td>discard</td>
+              </tr>
+              <tr>
+                  <td>210.42.121.241</td>
+                  <td>TCP</td>
+                  <td>5Mbps/s</td>
+                  <td>discard</td>
+              </tr>
+              <tr>
+                  <td>210.42.121.241</td>
+                  <td>TCP</td>
+                  <td>5Mbps/s</td>
+                  <td>discard</td>
+              </tr>
+              <tr>
+                  <td>210.42.121.241</td>
+                  <td>TCP</td>
+                  <td>5Mbps/s</td>
+                  <td>discard</td>
+              </tr>
+              </tbody>
+            </table>
+            </div>
+            <div id="pagination">
+              <ul>
+                <li class = "sp" onclick="onSwitchPage(this)"><</li>
+                <span id="page_num">
+                <li onclick="onSwitchPage(this)" >1</li>
+                <li onclick="onSwitchPage(this)" >2</li>
+                </span>
+                <li class = "sp" onclick="onSwitchPage(this)">></li>
+              </ul>
+              
+            </div>
+          </div>
+        </div>
+      <div id="strategy_view">
+          <div class="source_nav">
+            <div style="height:100%;">
+              <div style="margin:0 10px 0 20px">
+                <span style="cursor: default;">当前策略</span>
+              </div>
+              <div style="position: relative;height:100%;margin:0px 10px 0px 10px" class="pull">
+                <span style="cursor: default;">default</span>
+                <div style="position: absolute;background-color: #34495e" class="pull_list">
+                  <div class="list_item">strategy1</div>
+                  <div class="list_item">strategy2</div>
+                  <div class="list_item">strategy3</div>
+                </div>
+              </div>
+            </div>
+            <div style="height: 100%; margin:0px 20px 0px 10px">
+              <span style="margin-right: 10px">编辑</span>
+              <span style="margin-left: 10px">保存</span>
+            </div>
+          </div>
+          <div id="strategy editor" style="height:90%;width:90%">
+            <textarea type="text" style="height: 95%;width: 100%;padding: 0;resize:none;"></textarea>
+          </div>
+      </div>
+      <div id="click_manage_view">
+        <div class="source_nav">
+          <div>
+            <span>Add</span>
+          </div>
+        </div>
+        <div id="table_wrapper">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <thead>
+              <tr>
+                <th>Num</th>
+                <th>Load</th>
+                <th>option</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td>1</td>
+                  <td>50%</td>
+                  <td>cancel</td>
+              </tr>
+             
+              </tbody>
+            </table>
+            </div>
+      </div>
+    </div>
+    
+  </body>
+  <script src="index.js"></script>
+</html>
