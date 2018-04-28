@@ -140,7 +140,7 @@
               </div>
               <div style="position: relative;height:100%;margin:0px 10px 0px 10px" class="pull">
                 <span style="cursor: default;">default</span>
-                <div style="position: absolute;background-color: #34495e" class="pull_list">
+                <div style="position: absolute;background-color: #23313f" class="pull_list">
                   <div class="list_item">strategy1</div>
                   <div class="list_item">strategy2</div>
                   <div class="list_item">strategy3</div>
@@ -152,14 +152,40 @@
               <span style="margin-left: 10px">保存</span>
             </div>
           </div>
-          <div id="strategy editor" style="height:90%;width:90%">
+          <div id="strategy editor" style="height:90%;width:90%;display: none">
             <textarea type="text" style="height: 95%;width: 100%;padding: 0;resize:none;"></textarea>
+           
           </div>
+          <div id="table_wrapper">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <thead>
+              <tr>
+                <th>Enable</th>
+                <th>Name</th>
+                <th>description</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td><input name="enable" type="checkbox" value="1" onchange="onChoose(this)"></td>
+                  <td>block tcp</td>
+                  <td>block tcp</td>
+              </tr>
+              <tr>
+                  <td><input name="enable" type="checkbox" value="2" onchange="onChoose(this)"></td>
+                  <td>block udp</td>
+                  <td>block udp</td>
+              </tr>
+             
+              </tbody>
+            </table>
+        </div>
       </div>
       <div id="click_manage_view">
         <div class="source_nav">
-          <div>
-            <span>Add</span>
+          <div style="margin:0px 10px 0px 20px">
+            <span>Add</span>&nbsp;&nbsp;&nbsp;
+            <span>Delete</span>
           </div>
         </div>
         <div id="table_wrapper">
@@ -180,7 +206,7 @@
              
               </tbody>
             </table>
-            </div>
+        </div>
       </div>
     </div>
     

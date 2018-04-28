@@ -274,6 +274,9 @@ tbody{
     padding:5px 10px 5px 10px;
     cursor: pointer;
 }
+.pull:hover{
+    background-color: #23313f;
+}
 .pull:hover .pull_list{
     display: flex;
     flex-direction: column;

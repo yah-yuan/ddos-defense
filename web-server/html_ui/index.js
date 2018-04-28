@@ -186,3 +186,11 @@ function change_view_style(ob){
         pie_chart.resize();
     }
 }
+
+//////////////////////////////
+//strategy checkbox
+//////////////////////////////
+function onChoose(object){
+
+    alert(object.checked);
+}
