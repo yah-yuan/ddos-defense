@@ -54,13 +54,15 @@ class ControlSocket(object):
             raise ControlSocketError(recvMessage.decode('utf8'))
 
         # open a click config file
-        try:
-            file = open(configfile)
-        except Exception as e:
-            raise ControlSocketError(e)
-        config ='WRITE hotconfig ' + file.read()
-        file.close()
-        config =config.encode('utf8')
+        # try:
+        #     file = open(configfile)
+        # except Exception as e:
+        #     raise ControlSocketError(e)
+        # config ='WRITE hotconfig ' + file.read()
+        # file.close()
+        # config =config.encode('utf8')
+        # 直接作为字符串输入
+        config = configfile
 
         # send config
         try:

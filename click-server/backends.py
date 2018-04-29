@@ -24,4 +24,9 @@ class Backends(object):
                 self.Readflow(interval,amount)
 
     def Readflow(self,interval, amount):
+        '''json'''
         pass
+
+    def CreateConfig(self,strategy):
+        '''根据选择的策略创建config文件'''
+        newConfig = 
