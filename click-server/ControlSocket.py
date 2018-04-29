@@ -84,8 +84,14 @@ class ControlSocket(object):
             self.con.connect(addr)
         except ConnectionRefusedError as e:
             raise ControlSocketError('remote click is currently not online')
-        print('新connect连接至',str(newPort))
-        self.port = newPort
+        recvMessage = self.con.recv(1024)
+        print(recvMessage.decode('utf8'))
+        if b'Click::ControlSocket/1.3' in recvMessage:
+            print('新connect连接至',str(newPort))
+            self.port = newPort
+            return None
+        else:
+            raise ControlSocketError('Remote click ERROR')
 
     
     def Close(self):
@@ -110,6 +116,12 @@ class ControlSocket(object):
         self.con.send(b'WRITE '+ name.encode('utf8'))
         recvMessage = self.con.recv(65535)
         print(recvMessage)
+
+    def CheckOnline(self):
+        pass
+    
+    def CheckHandler(self):
+        pass
 
 class ControlSocketError(Exception):
     def __init__(self,e):
