@@ -17,8 +17,12 @@ class ControlSocket(object):
        This class will create a socket connect to the click.'''
 
     def __init__(self, click):
-        self.IPaddr = click.IPaddr
-        self.port = click.controlPort
+        if DEBUG:
+            self.IPaddr = '192.168.2.129'
+            self.port = 22222
+        else:
+            self.IPaddr = click.IPaddr
+            self.port = click.controlPort
         addr = (self.IPaddr,self.port)
         self.con = socket.socket()
         try:
@@ -80,7 +84,7 @@ class ControlSocket(object):
             self.con.connect(addr)
         except ConnectionRefusedError as e:
             raise ControlSocketError('remote click is currently not online')
-        print('新connect连接至',newPort)
+        print('新connect连接至',str(newPort))
         self.port = newPort
 
     
@@ -119,3 +123,13 @@ class ControlSocketError(Exception):
 if __name__ == '__main__':
     con = ControlSocket('')
     con.WriteHandler('LOG.flush\n')
+
+def test():
+    controller = ControlSocket(None)
+    controller.Close()
+
+if __name__ == '__main__':
+    if DEBUG:
+        test()
+    else:
+        pass

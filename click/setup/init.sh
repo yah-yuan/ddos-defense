@@ -1,1 +1,0 @@
-click init.click -R

@@ -26,16 +26,16 @@ class Click(object):
         self.datapipe = None
         self.online = True
 
-    def ChangeConfig(self):
-        # if DEBUG:
-        #     self.controller.HotConfig('config/ddos.click',22223)
-        #     self.controller.Close()
-        path = self.writer.NewConfig()
-        if self.controller.HotConfig(path):
-            return False
-        elif:
-            return False
-        self.controller.Close()
+    def ChangeConfig(self, path):
+        if DEBUG:
+            self.controller.HotConfig('config/router.click',22223)
+            self.controller.Close()
+        else:
+            if self.controller.HotConfig(path):
+                return False
+            elif:
+                return False
+            self.controller.Close()
 
     def CloseClick(self):
         pass
