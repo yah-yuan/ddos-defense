@@ -62,19 +62,19 @@ class ConfigWriter(object):
 
         self.port = port
 
-    def NewConfig(self,Strategy):
+    def NewConfig(self,Strategy,controlport):
         self.strategy_init(Strategy)
         config =self.basic+self.Ip_Classfier+self.port
-        try:
-            file = open('test.click', 'w')
-            file.write(config)
-        except IOError:
-            print('FILE WRITE ERROR')
-        else:
-            print('FILE WRITE SUCCESS')
-        file.close()
-
-    def ChangeFile
+        # try:
+        #     file = open('test.click', 'w')
+        #     file.write(config)
+        # except IOError:
+        #     print('FILE WRITE ERROR')
+        # else:
+        #     print('FILE WRITE SUCCESS')
+        # file.close()
+        # 直接返回一个字符串形式的config文件,交给hotconfig写本地文件
+        return config
 
 if __name__ == '__main__':
     witer = ConfigWriter(22222,'192.168.3.133',[],'192.168.3.255')
