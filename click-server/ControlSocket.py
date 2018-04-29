@@ -76,7 +76,8 @@ class ControlSocket(object):
             raise ControlSocketError(recvMessage.decode('utf8'))
         else:
             print('Hot-swap succeed')
-
+            
+        self.Close()
         self.NewConnect(newPort)
 
     def NewConnect(self,newPort):

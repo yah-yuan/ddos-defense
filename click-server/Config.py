@@ -62,7 +62,7 @@ class ConfigWriter(object):
 
         self.port = port
 
-    def NewConfig(self,Strategy):
+    def NewConfig(self,Strategy,controlport):
         self.strategy_init(Strategy)
         config =self.basic+self.Ip_Classfier+self.port
         # try:

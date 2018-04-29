@@ -1,5 +1,6 @@
 from ControlSocket import ControlSocket
 from Config import ConfigWriter
+import os
 
 DEBUG = True
 
@@ -26,18 +27,35 @@ class Click(object):
         self.datapipe = None
         self.online = True
 
-    def ChangeConfig(self, path):
+    def ChangeConfig(self):
         if DEBUG:
             self.controller.HotConfig('config/router.click',22223)
             self.controller.Close()
         else:
-            if self.controller.HotConfig(path):
-                return False
+            if self.controlPort == 22222:
+                newPort = self.controlPort + 1
+            else:
+                newPort = self.controlPort - 1
+            if self.controller.HotConfig(name+'_newconfig.click'):
+                return True
             elif:
                 return False
             self.controller.Close()
 
     def CloseClick(self):
+        pass
+
+    def CreateConfig(self, strategy):
+        if self.controlPort == 22222:
+            port = self.controlPort + 1
+        else:
+            port = self.controlPort - 1
+        newconfig = self.writer.NewConfig(strategy,controlport)
+        self.newconfig = newconfig
+        file = open(name+'_newconfig.click','wb+')
+        file.write(newconfig)
+        file.close()
+        return newconfig
         pass
 
 def main():

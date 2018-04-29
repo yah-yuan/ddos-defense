@@ -36,12 +36,17 @@ class Center():
         if self.current_strategy == 'user-define':
             # 这里好像比较难以自动化
             pass
-        for click in sefl.click_list:
-            configfile = click.
-            click.HotConfig(configfile)
-
-    def Create_config(self, strategy):
-        click = self.click_list[0]
+        else:
+            for click in self.click_list:
+                try:
+                    res = click.HotConfig()
+                except Exception,e:
+                    return click.name
+            return 'SUCCESS'
+    def Create_config(self, strategy, name = 'demo_click'):
+        for click in self.click_list:
+            click.CreateConfig(strategy)
+        return self.click_list[0].newconfig
 
     def Check_Online(self):
         '''检测当前click是否在线'''

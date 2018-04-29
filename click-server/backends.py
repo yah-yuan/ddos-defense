@@ -12,7 +12,8 @@ class Backends(object):
         recv = socket.recv(1024)
         if b'Con succeed' in recv:
             self.socket = socket
-            threading.Thread(target=self.Listener)
+            # threading.Thread(target=self.Listener)
+            self.Listener()
     def Listener(self):
         while True:
             recv = self.socket.recv()
@@ -22,6 +23,11 @@ class Backends(object):
                 interval = int(re.search('\d+',re.search('interval:.+?\d+',recv).group()).group())
                 amount = int(re.search('\d+',re.search('amount:.+?\d+',recv).group()).group())
                 self.Readflow(interval,amount)
+            elif 'new strategy' in recv:
+                pass
+                # 商定数据结构
+            elif 'submmit config' in recv:
+                
 
     def Readflow(self,interval, amount):
         '''json'''
@@ -29,4 +35,14 @@ class Backends(object):
 
     def CreateConfig(self,strategy):
         '''根据选择的策略创建config文件'''
-        newConfig = 
+        newConfig = self.manager.Create_config(strategy)
+        self.socket.send(newConfig.encode('utf8'))
+
+    def Submit(self):
+        '''提交更改'''
+        res = self.manager.Change_config()
+        if res != 'SUCCESS':
+            self.socket.send(b'error')
+            # 应将config恢复到之前的状态
+        else:
+            self.socket.send(b'success')
