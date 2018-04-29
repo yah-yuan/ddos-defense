@@ -37,6 +37,7 @@ class Center():
             # 这里好像比较难以自动化
             pass
         for click in sefl.click_list:
+            configfile = click.
             click.HotConfig(configfile)
 
     def Create_config(self, strategy):
