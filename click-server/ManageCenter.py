@@ -1,4 +1,5 @@
 import Click
+import backends
 
 class Center():
     '''管理click,接受web-server的控制信息'''
@@ -14,6 +15,7 @@ class Center():
         # 申请一个新的main计算资源
         # self.main_click = Click.Click('main_click','192.168.3.134',22222,33333)
         self.demo_click = Click.Click('demo_click','192.168.2.129',22222,33333)
+        self.backends = backends.Backends(self)
         self.click_list.append(self.demo_click)
         pass
 
@@ -52,6 +54,7 @@ class Center():
         '''检测当前click是否在线'''
         pass
 
-    def Listener(self):
-        '''监听web服务器发来的控制请求'''
+    def ReadFlow(self, interval, amount):
+        # 查询,返回一个字典
+        return {}
         pass

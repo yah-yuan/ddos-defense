@@ -50,7 +50,7 @@ class Click(object):
             port = self.controlPort + 1
         else:
             port = self.controlPort - 1
-        newconfig = self.writer.NewConfig(strategy,controlport)
+        newconfig = self.writer.NewConfig(controlport,strategy,)
         self.newconfig = newconfig
         file = open(name+'_newconfig.click','wb+')
         file.write(newconfig)

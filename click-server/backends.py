@@ -1,6 +1,9 @@
 import socket
 import threading
 import re
+import json
+
+DEBUG = True
 
 class Backends(object):
     '''提供前端可用的数据接口,通过socket通信'''
@@ -31,6 +34,10 @@ class Backends(object):
 
     def Readflow(self,interval, amount):
         '''json'''
+        data = self.manager.Readflow(interval, amount)
+        json_text = json.dump(data)
+        if DEBUG:
+            print(json_te)
         pass
 
     def CreateConfig(self,strategy):

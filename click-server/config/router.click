@@ -4,6 +4,7 @@
 // 接受以上参数
 CONTROL :: ControlSocket(tcp, 22222);
 out :: Queue(1024) -> ToDevice(ens34)
+LOG :: ToIPSummaryDump(/root/log/testlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto)
 
 FromDevice(ens34)
   -> 
