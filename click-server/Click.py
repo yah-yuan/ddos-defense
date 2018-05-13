@@ -1,6 +1,7 @@
-from ControlSocket import ControlSocket
-from Config import ConfigWriter
 import os
+
+from Config import ConfigWriter
+from ControlSocket import ControlSocket
 
 DEBUG = True
 
@@ -22,37 +23,34 @@ class Click(object):
         self.IPaddr = ipaddr
         self.controlPort = controlPort
         self.dataPort = dataPort
-        self.controller = ControlSocket(self)
+        self.controller = ControlSocket(ipaddr, controlPort)
         self.writer = ConfigWriter(self)
         self.datapipe = None
         self.online = True
 
     def ChangeConfig(self):
-        if DEBUG:
-            self.controller.HotConfig('config/router.click',22223)
-            self.controller.Close()
-        else:
-            if self.controlPort == 22222:
-                newPort = self.controlPort + 1
-            else:
-                newPort = self.controlPort - 1
-            if self.controller.HotConfig(name+'_newconfig.click'):
-                return True
-            elif:
-                return False
-            self.controller.Close()
+        config = open('./newconfig/'+name+'_newconfig.click').read(-1)
+        if self.controller.HotConfig(config,self.newControlPort):
+            self.controlPort = self.newControlPort
+            return True
+        elif:
+            return '更改配置失败'
 
     def CloseClick(self):
-        pass
+        self.controller.Close()
+        os.remove('')
 
     def CreateConfig(self, strategy):
-        if self.controlPort == 22222:
-            port = self.controlPort + 1
+        if self.controlPort != self.newControlPort:
+            pass
         else:
-            port = self.controlPort - 1
+            if self.controlPort == 22222:
+                self.newControlPort = 22223
+            else:
+                self.newControlPort = 22222
         newconfig = self.writer.NewConfig(controlport,strategy,)
         self.newconfig = newconfig
-        file = open(name+'_newconfig.click','wb+')
+        file = open('./newconfig/'+name+'_newconfig.click','wb+')
         file.write(newconfig)
         file.close()
         return newconfig

@@ -16,13 +16,13 @@ class ControlSocket(object):
     '''Operate a remote click by its handlers.
        This class will create a socket connect to the click.'''
 
-    def __init__(self, click):
+    def __init__(self, IPaddr, port):
         if DEBUG:
             self.IPaddr = '192.168.2.129'
             self.port = 22222
         else:
-            self.IPaddr = click.IPaddr
-            self.port = click.controlPort
+            self.IPaddr = IPaddr
+            self.port = port
         addr = (self.IPaddr,self.port)
         self.con = socket.socket()
         try:

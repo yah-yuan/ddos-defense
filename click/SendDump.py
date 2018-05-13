@@ -1,5 +1,6 @@
 import socket
 import time
+import re
 '''
 仅被sub-click使用
 建立一个和clickserver通信的socket
@@ -9,15 +10,16 @@ import time
 logtext = ''
 def ReadLog(logpath = '/root/logfile/log'):
     '''读文件'''
-    pass
 
 def Send(socket):
     pass
 
 def main():
-    pass
-    socket = None
-    
-    while True:
-        pass
-        time.sleep(1)
+    local_addr = ('192.168.2.129',11111)
+    s = socket.socket()
+    s.bind(local_addr)
+    s.listen(5)
+    conn,addr = s.accept()
+
+if __name__ == '__main__':
+    main()

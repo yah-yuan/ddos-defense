@@ -1,7 +1,7 @@
 import socket 
 import time 
     
-address = ('127.0.0.1', 33333)  
+address = ('192.168.2.129', 33333)  
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  
     
 while True: 
