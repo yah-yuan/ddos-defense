@@ -10,16 +10,21 @@ class Backends(object):
     def __init__(self,manager):
         addr = ('127.0.0.1', 54545)
         socket = socket.socket()
-        socket.connect(addr)
-        socket.send(b'Con succeed!\n')
-        recv = socket.recv(1024)
-        if b'Con succeed' in recv:
-            self.socket = socket
-            # threading.Thread(target=self.Listener)
-            self.Listener()
-    def Listener(self):
+        socket.bind(addr)
+        socket.listen(5)
         while True:
-            recv = self.socket.recv()
+            con,addr = socket.accept()
+            self.Listener(con)
+        
+        # recv = socket.recv(1024)
+        # if b'Con succeed' in recv:
+        #     self.socket = socket
+        #     # threading.Thread(target=self.Listener)
+        #     self.Listener()
+    def Listener(con):
+        socket = con
+        while True:
+            recv = socket.recv()
             recv = recv.decode('utf8')
             if 'flow data' in recv:
                 # eg: 'flow data interval: 1, amount: 100' 间隔(s),数据个数
