@@ -3,7 +3,7 @@ import os
 from Config import ConfigWriter
 from ControlSocket import ControlSocket
 
-DEBUG = True
+DEBUG = False
 
 class Click(object):
     '''A click object, including all the information
@@ -15,16 +15,19 @@ class Click(object):
     config = 'default config'
     configPath = './config/'
 
-    def __init__(self,name,ipaddr,controlPort = 22222,dataPort = 33333):
+    def __init__(self,name,con_ipaddr,listen_ipaddr,\
+            app_server_ip,listen_broadcast,listen_device,\
+            listen_ether,controlPort = 22222,dataPort = 33333):
         if name == 'main_click':
             self.main_click = True
         if DEBUG:
             ipaddr = '192.168.3.136'
-        self.IPaddr = ipaddr
+        self.name = name
+        self.IPaddr = con_ipaddr
         self.controlPort = controlPort
         self.dataPort = dataPort
-        self.controller = ControlSocket(ipaddr, controlPort)
-        self.writer = ConfigWriter(self)
+        self.controller = ControlSocket(con_ipaddr,controlPort)
+        self.writer = ConfigWriter(controlPort,listen_ipaddr,app_server_ip,listen_broadcast,listen_device,listen_ether)
         self.datapipe = None
         self.online = True
 
@@ -33,7 +36,7 @@ class Click(object):
         if self.controller.HotConfig(config,self.newControlPort):
             self.controlPort = self.newControlPort
             return True
-        elif:
+        else:
             return '更改配置失败'
 
     def CloseClick(self):

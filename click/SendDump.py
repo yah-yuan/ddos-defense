@@ -13,9 +13,11 @@ import json
 logtext = ''
 def ReadLog(logpath = 'testlog'):
     '''读文件'''
-    os.system('click -h LOG:flush')
     logfile = open(logpath,'r')
     currentLog = logfile.read(-1)
+    if currentLog == None:
+        logtext = ''
+        return None
     logfile.close()
     # print(currentLog.encode('utf8'))
     name = ('timestamp','ip_src','ip_dst','size','pkt_type')
@@ -36,24 +38,29 @@ def ReadLog(logpath = 'testlog'):
         num2 += 1
         print(dump)
         table.add_row(item)
-    print(table)
     json_out = json.dumps(form_dic,sort_keys=True,indent=4,separators=(',',':'))
     print(json_out)
-    # logfile = open(logpath,'w')
-    # logfile.close()
+    logfile = open(logpath,'w')
+    logfile.close()
+    logfile = json_out
 
-def Send(socket):
-    pass
+def Send(con,addr):
+    target = (con,addr)
+    i = 0
+    while i<3:
+        con.sendto(logtext,target)
+        i += 1
+    
 
 def main():
-    remote_addr = ('192.168.3.129',33333)
-    s = socket.socket()
-    s.connect()
-    self.con = s
+    remote_addr = ('192.168.2.133',33333)
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    con = s
     while True:
         ReadLog()
-        Send()
-        time.sleep(0.1)
+        if logtext != '':
+            Send(con, remote_addr)
+        time.sleep(1)
 
 if __name__ == '__main__':
     ReadLog()

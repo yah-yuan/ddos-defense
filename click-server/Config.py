@@ -10,12 +10,12 @@ import re
 '''
 
 class ConfigWriter(object):
-    def __init__(self,ControlPort,Ip,IpDst,IpBrodCast,GateWay,Mac):
+    def __init__(self,ControlPort,Ip,IpDst,IpBrodCast,device,Mac):
     #basic
         # self.Control = 'CONTROL :: ControlSocket(tcp,'+str(ControlPort)+')\n'
         self.Out_default   = 'out :: Queue(1024) -> ToDevice(ens33)\n'
-        self.Out_red = 'out :: RED(768,1024,0.02)->Queue(1024) -> ToDevice('+GateWay+')\n'
-        self.Classifier ='FromDevice('+GateWay+')-> cl :: Classifier(12/0806 20/0001,12/0806 20/0002,12/0800)\n'
+        self.Out_red = 'out :: RED(768,1024,0.02)->Queue(1024) -> ToDevice('+device+')\n'
+        self.Classifier ='FromDevice('+device+')-> cl :: Classifier(12/0806 20/0001,12/0806 20/0002,12/0800)\n'
         self.arpr    ='-> arpr :: ARPResponder('+Ip+', '+Mac+')\n->out;\n'
         self.arpq    ='cl[1] -> [1]arpq :: ARPQuerier('+Ip+','+Mac+')\n->out;\n'
         self.Set_IPAddr ='SetIPAddress('+IpDst+')'
@@ -106,5 +106,5 @@ class ConfigWriter(object):
 
 
 if __name__ == '__main__':
-    witer = ConfigWriter(22222,'192.168.3.128','192.168.3.129','192.168.3.255','ens34','00:0c:29:44:f4:4c')
-witer.NewConfig(('smuf_attack','land_attack','red'),('10.1.1.2','10.1.1.3'),1124)
+    writer = ConfigWriter(22222,'192.168.3.128','192.168.3.129','192.168.3.255','ens34','00:0c:29:44:f4:4c')
+    writer.NewConfig(('smuf_attack','land_attack','red'),('10.1.1.2','10.1.1.3'),1124)

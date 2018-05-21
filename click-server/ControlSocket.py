@@ -1,4 +1,6 @@
 import socket
+import threading
+import time
 
 CODE_OK = b'200'
 CODE_OK_WARN = b'220'
@@ -32,12 +34,34 @@ class ControlSocket(object):
         recvMessage = self.con.recv(1024)
         print(recvMessage.decode('utf8'))
         if b'Click::ControlSocket/1.3' in recvMessage:
-            return None
+            pass
         else:
             raise ControlSocketError('Remote click ERROR')
+        threading.Thread(target=self.DataFlush)
         # self.con.send(b'READ config\n')
         # recv = self.con.recv(51231)
         # print(recv.decode('utf8'))
+
+    def DataFlush(self):
+        '''每秒钟刷新Log缓冲区'''
+        while True:
+            self.con.send(b'CHECKWRITE dropLOG:flush\n')
+            if b'200' in self.con.recv(1024):
+                pass
+            else:
+                continue
+            self.con.send(b'CHECKWRITE passLOG:flush\n')
+            if b'200' in self.con.recv(1024):
+                pass
+            else:
+                continue
+
+            self.con.send('WRITE passLOG:flush\n')
+            self.con.recv(1024)
+            self.con.send('WRITE dropLOG:flush\n')
+            self.con.recv(1024)
+
+            time.sleep(1)
 
     def HotConfig(self, configfile, newPort):
         '''Hot swap the config of the remote click device,
@@ -62,7 +86,8 @@ class ControlSocket(object):
         # file.close()
         # config =config.encode('utf8')
         # 直接作为字符串输入
-        config = configfile
+        config = 'WRITE hotconfig ' + configfile
+        config =config.encode('utf8')
 
         # send config
         try:

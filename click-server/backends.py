@@ -1,6 +1,6 @@
 import json
 import re
-import socket
+import socket as sock
 import threading
 
 DEBUG = True
@@ -9,11 +9,14 @@ class Backends(object):
     '''提供前端可用的数据接口,通过socket通信'''
     def __init__(self,manager):
         addr = ('127.0.0.1', 54545)
-        socket = socket.socket()
+        socket = sock.socket()
         socket.bind(addr)
         socket.listen(5)
+        self.socket = socket
+
+    def run(self):
         while True:
-            con,addr = socket.accept()
+            con,addr = self.socket.accept()
             self.Listener(con)
         
         # recv = socket.recv(1024)
@@ -35,6 +38,7 @@ class Backends(object):
                 pass
                 # 商定数据结构
             elif 'submmit config' in recv:
+                pass
                 
 
     def Readflow(self,interval, amount):
