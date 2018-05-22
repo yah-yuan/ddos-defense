@@ -3,7 +3,7 @@ import re
 import socket as sock
 import threading
 
-DEBUG = True
+DEBUG = False
 TYPE = {
     0:'REQUEST_GLOBLE_FLOW',
     1:'REQUEST_STRATEGY_LIST',
@@ -54,22 +54,30 @@ class Backends(object):
             if request == 0:
                 # 'REQUEST_GLOBLE_FLOW'
                 pass
-            if request == 1:
+            elif request == 1:
                 # 'REQUEST_STRATEGY_LIST'
-            if request == 2:
+                pass
+            elif request == 2:
                 # 'REQUEST_DETAILED_CONFIG'
-            if request == 3:
+                pass
+            elif request == 3:
                 # 'REQUEST_IP_FLOW'
-            if request == 4:
+                pass
+            elif request == 4:
                 # 'SUBMMIT_STRATEGY_LIST'
-            if request == 5:
+                pass
+            elif request == 5:
                 # 'REQUEST_CLICK_LIST'
-            if request == 6:
+                pass
+            elif request == 6:
                 # 'REQUEST_CLICK_DETAIL'
-            if request == 7:
+                pass
+            elif request == 7:
                 # 'SUBMMIT_ADD_NEW_CLICK'
-            if request == 8:
+                pass
+            elif request == 8:
                 # 'SUBMMIT_DEL_OLD_CLICK'
+                pass
 
 
     def Readflow(self,interval, amount):

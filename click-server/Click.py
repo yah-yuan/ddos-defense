@@ -36,12 +36,16 @@ class Click(object):
         self.online = True
 
     def ChangeConfig(self):
-        f = open('./newconfig/'+name+'_newconfig.click','r')
+        f = open('./newconfig/'+self.name+'.click','r')
         config = f.read(-1)
         f.close()
-        if self.controller.HotConfig(config,self.newControlPort):
-            self.controlPort = self.newControlPort
-            f = open('./config/'+name+'_newconfig.click','w+')
+        if self.using_port == 0:
+            controlPort = self.controlPort[1]
+        else:
+            controlPort = self.controlPort[0]
+        if self.controller.HotConfig(config,controlPort):
+            self.controlPort = controlPort
+            f = open('./config/'+name+'.click','w+')
             f.write(config)
             f.close()
             return True
