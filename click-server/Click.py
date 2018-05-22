@@ -29,9 +29,14 @@ class Click(object):
         self.online = True
 
     def ChangeConfig(self):
-        config = open('./newconfig/'+name+'_newconfig.click').read(-1)
+        f = open('./newconfig/'+name+'_newconfig.click','r')
+        config = f.read(-1)
+        f.close()
         if self.controller.HotConfig(config,self.newControlPort):
             self.controlPort = self.newControlPort
+            f = open('./config/'+name+'_newconfig.click','w+')
+            f.write(config)
+            f.close()
             return True
         elif:
             return '更改配置失败'
