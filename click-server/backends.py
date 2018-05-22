@@ -4,6 +4,25 @@ import socket as sock
 import threading
 
 DEBUG = True
+TYPE = {
+    0:'REQUEST_GLOBLE_FLOW',
+    1:'REQUEST_STRATEGY_LIST',
+    2:'REQUEST_DETAILED_CONFIG',
+    3:'REQUEST_IP_FLOW',
+    4:'SUBMMIT_STRATEGY_LIST',
+    5:'REQUEST_CLICK_LIST',
+    6:'REQUEST_CLICK_DETAIL',
+    7:'SUBMMIT_ADD_NEW_CLICK',
+    8:'SUBMMIT_DEL_OLD_CLICK'
+}
+
+def json_unpack(packet):
+    json_out = json.loads(packet)
+    return json_out
+
+def json_pack(messege):
+    json_out = json.dumps(messege)
+    return json_out
 
 class Backends(object):
     '''提供前端可用的数据接口,通过socket通信'''
@@ -13,6 +32,7 @@ class Backends(object):
         socket.bind(addr)
         socket.listen(5)
         self.socket = socket
+        self.manager = manager
 
     def run(self):
         while True:
@@ -29,17 +49,28 @@ class Backends(object):
         while True:
             recv = socket.recv()
             recv = recv.decode('utf8')
-            if 'flow data' in recv:
-                # eg: 'flow data interval: 1, amount: 100' 间隔(s),数据个数
-                interval = int(re.search('\d+',re.search('interval:.+?\d+',recv).group()).group())
-                amount = int(re.search('\d+',re.search('amount:.+?\d+',recv).group()).group())
-                self.Readflow(interval,amount)
-            elif 'new strategy' in recv:
+            request = json_pack(recv)
+            requst_type = request['type']
+            if request == 0:
+                # 'REQUEST_GLOBLE_FLOW'
                 pass
-                # 商定数据结构
-            elif 'submmit config' in recv:
-                pass
-                
+            if request == 1:
+                # 'REQUEST_STRATEGY_LIST'
+            if request == 2:
+                # 'REQUEST_DETAILED_CONFIG'
+            if request == 3:
+                # 'REQUEST_IP_FLOW'
+            if request == 4:
+                # 'SUBMMIT_STRATEGY_LIST'
+            if request == 5:
+                # 'REQUEST_CLICK_LIST'
+            if request == 6:
+                # 'REQUEST_CLICK_DETAIL'
+            if request == 7:
+                # 'SUBMMIT_ADD_NEW_CLICK'
+            if request == 8:
+                # 'SUBMMIT_DEL_OLD_CLICK'
+
 
     def Readflow(self,interval, amount):
         '''json'''
@@ -62,3 +93,9 @@ class Backends(object):
             # 应将config恢复到之前的状态
         else:
             self.socket.send(b'success')
+
+if __name__ == '__main__':
+    file = open('test.json')
+    content = file.read(-1)
+    out = json_unpack(content)
+    print(type(out['type']))

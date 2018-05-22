@@ -10,6 +10,7 @@ import json
 定时读取click log文件中的数据,(总结)发送至clickserver,清空click log
 读之前使用句柄让click log刷新
 '''
+APP_SERVER_IP = '192.168.2.132'
 logtext = ''
 def ReadLog(logpath = 'testlog'):
     '''读文件'''
@@ -53,7 +54,7 @@ def Send(con,addr):
     
 
 def main():
-    remote_addr = ('192.168.2.133',33333)
+    remote_addr = (APP_SERVER_IP,33333)
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     con = s
     while True:
