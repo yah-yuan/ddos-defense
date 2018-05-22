@@ -36,17 +36,14 @@ class Click(object):
         self.online = True
 
     def ChangeConfig(self):
-        config = open('./newconfig/'+self.name+'.click','r').read(-1)
-        if self.using_port == 0:
-            new_net_port = self.controlPort[1]
-        else:
-            new_net_port = self.controlPort[2]
-        if self.controller.HotConfig(config,new_net_port):
-            if self.using_port == 0:
-                self.using_port = 1
-            else:
-                self.using_port = 0
-            print(self.name,' hot swap succeed')
+        f = open('./newconfig/'+name+'_newconfig.click','r')
+        config = f.read(-1)
+        f.close()
+        if self.controller.HotConfig(config,self.newControlPort):
+            self.controlPort = self.newControlPort
+            f = open('./config/'+name+'_newconfig.click','w+')
+            f.write(config)
+            f.close()
             return True
             # self.controlPort = self.newControlPort
             # return True
