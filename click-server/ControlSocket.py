@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+from define import *
 
 CODE_OK = b'200'
 CODE_OK_WARN = b'220'
@@ -12,7 +13,7 @@ CODE_HANDLER_ERR = b'520'
 CODE_PERMISSION = b'530'
 CODE_NO_ROUTER = b'540'
 
-DEBUG = True
+DEBUG = False
 
 class ControlSocket(object):
     '''Operate a remote click by its handlers.
@@ -115,7 +116,7 @@ class ControlSocket(object):
         recvMessage = self.con.recv(1024)
         print(recvMessage.decode('utf8'))
         if b'Click::ControlSocket/1.3' in recvMessage:
-            print('新connect连接至',str(newPort))
+            print('新connect已连接至',str(newPort))
             self.port = newPort
             return None
         else:

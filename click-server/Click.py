@@ -2,6 +2,7 @@ import os
 
 from Config import ConfigWriter
 from ControlSocket import ControlSocket
+from define import *
 
 DEBUG = False
 
@@ -17,25 +18,38 @@ class Click(object):
 
     def __init__(self,name,con_ipaddr,listen_ipaddr,\
             app_server_ip,listen_broadcast,listen_device,\
-            listen_ether,controlPort = 22222,dataPort = 33333):
+            listen_ether,net_controlPort,net_dataPort):
         if name == 'main_click':
             self.main_click = True
         if DEBUG:
             ipaddr = '192.168.3.136'
         self.name = name
         self.IPaddr = con_ipaddr
-        self.controlPort = controlPort
-        self.dataPort = dataPort
-        self.controller = ControlSocket(con_ipaddr,controlPort)
-        self.writer = ConfigWriter(controlPort,listen_ipaddr,app_server_ip,listen_broadcast,listen_device,listen_ether)
+        self.controlPort = net_controlPort
+        self.dataPort = net_dataPort
+        self.using_port = 0
+        self.controller = ControlSocket(con_ipaddr,net_controlPort[self.using_port])
+        self.writer_controlPort = (8081,8082)
+        self.writer_dataport = 8083
+        self.writer = ConfigWriter(self.writer_controlPort,listen_ipaddr,app_server_ip,listen_broadcast,listen_device,listen_ether)
         self.datapipe = None
         self.online = True
 
     def ChangeConfig(self):
-        config = open('./newconfig/'+name+'_newconfig.click').read(-1)
-        if self.controller.HotConfig(config,self.newControlPort):
-            self.controlPort = self.newControlPort
+        config = open('./newconfig/'+self.name+'.click','r').read(-1)
+        if self.using_port == 0:
+            new_net_port = self.controlPort[1]
+        else:
+            new_net_port = self.controlPort[2]
+        if self.controller.HotConfig(config,new_net_port):
+            if self.using_port == 0:
+                self.using_port = 1
+            else:
+                self.using_port = 0
+            print(self.name,' hot swap succeed')
             return True
+            # self.controlPort = self.newControlPort
+            # return True
         else:
             return '更改配置失败'
 
@@ -44,24 +58,20 @@ class Click(object):
         os.remove('')
 
     def CreateConfig(self, strategy):
-        if self.controlPort != self.newControlPort:
-            pass
+        if self.using_port == 0:
+            controlPort = self.controlPort[1]
         else:
-            if self.controlPort == 22222:
-                self.newControlPort = 22223
-            else:
-                self.newControlPort = 22222
-        newconfig = self.writer.NewConfig(controlport,strategy,)
+            controlPort = self.controlPort[0]
+        newconfig = self.writer.NewConfig(controlPort,strategy,[],self.name)
         self.newconfig = newconfig
-        file = open('./newconfig/'+name+'_newconfig.click','wb+')
+        file = open('./newconfig/'+self.name+'.click','w+')
         file.write(newconfig)
         file.close()
         return newconfig
-        pass
 
-def main():
-    click = Click('test','192.168.4.130')
-    click.ChangeConfig()
+# def main():
+#     click = Click('test','192.168.4.130')
+#     click.ChangeConfig()
     
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()

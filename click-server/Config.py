@@ -1,5 +1,5 @@
 import re
-
+from define import *
 
 '''
 'rst_attack'
@@ -10,16 +10,17 @@ import re
 '''
 
 class ConfigWriter(object):
-    def __init__(self,ControlPort,Ip,IpDst,IpBrodCast,device,Mac):
+    def __init__(self,ControlPort,Ip,IpDst,IpBrodCast,GateWay,Mac):
     #basic
-        # self.Control = 'CONTROL :: ControlSocket(tcp,'+str(ControlPort)+')\n'
         self.Out_default   = 'out :: Queue(1024) -> ToDevice(ens33)\n'
-        self.Out_red = 'out :: RED(768,1024,0.02)->Queue(1024) -> ToDevice('+device+')\n'
-        self.Classifier ='FromDevice('+device+')-> cl :: Classifier(12/0806 20/0001,12/0806 20/0002,12/0800)\n'
+        self.Out_red = 'out :: RED(768,1024,0.02)->Queue(1024) -> ToDevice('+GateWay+')\n'
+        self.dropLog ='dropLog :: ToIPSummary Dump(/root/log/droplog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
+        self.passLog ='passLog :: ToIPSummary Dump(/root/log/passlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
+        self.Classifier ='FromDevice('+GateWay+')-> cl :: Classifier(12/0806 20/0001,12/0806 20/0002,12/0800)\n'
         self.arpr    ='-> arpr :: ARPResponder('+Ip+', '+Mac+')\n->out;\n'
         self.arpq    ='cl[1] -> [1]arpq :: ARPQuerier('+Ip+','+Mac+')\n->out;\n'
         self.Set_IPAddr ='SetIPAddress('+IpDst+')'
-        self.Ip_strip = '->cl[2]->Strip(14)\n-> CheckIPHeader(CHECKSUM false)\n->DropBroadcasts\n->CheckLength(65535)\n'
+        self.Ip_strip = 'cl[2]->Strip(14)\n-> CheckIPHeader(CHECKSUM false)\n->DropBroadcasts\n->CheckLength(65535)\n'
         self.IpPrintR ='-> IPPrint("recv IP detail")\n'
         self.IpRewriter ='->rw :: IPRewriter(pattern - - '+IpDst+' -0 0)\n'
         self.DecIpTTL   ='-> dt :: DecIPTTL\n'
@@ -34,8 +35,10 @@ class ConfigWriter(object):
         self.smuf_attack ='dst '+IpBrodCast+' and icmp,'
         self.land_attack = 'dst '+Ip+' and src '+Ip+','
 
-    def ChangePort(self,newPort):
-        self.Control = 'CONTROL :: ControlSocket(tcp,'+newPort+')\n'
+
+
+    # def ChangePort(self,newPort):
+    #     self.Control = 'CONTROL :: ControlSocket(tcp,'+newPort+')\n'
 
     def strategy_init(self,Strategy,IpBanList:list):
         self.Strategy_build=''
@@ -63,25 +66,24 @@ class ConfigWriter(object):
 
         port = ''
         for i in range(self.length):
-            port +='ic['+str(i)+']->discard\n'
-        port +='ic['+str(self.length)+']->'+self.IpRewriter+self.DecIpTTL+self.IpFragment+self.IpPrintS+self.IpOut+'\n'
+            port +='ic['+str(i)+']->dropLog->discard\n'
+        port +='ic['+str(self.length)+']->'+self.IpRewriter+self.DecIpTTL+self.IpFragment+self.IpPrintS+'->passLog'+self.IpOut+'\n'
 
         if self.red_flag == 0:
-           basic =self.Control + self.Out_default +  self.Classifier + self.arpr + self.arpq + self.Ip_strip
+           basic =self.Control + self.Out_default + self.dropLog + self.passLog  +  self.Classifier + self.arpr + self.arpq + self.Ip_strip
            basic+=self.IpPrintR
            self.basic = basic
         else:
-           basic = self.Control + self.Out_red + self.Classifier + self.arpr + self.arpq + self.Ip_strip
+           basic = self.Control + self.Out_red + self.dropLog + self.passLog + self.Classifier + self.arpr + self.arpq + self.Ip_strip
            basic += self.IpPrintR
            self.basic =basic
 
         self.port = port
 
-    def NewConfig(self,ControlPort,Strategy,IpBanList,id = 0):
-        self.Control = 'CONTROL :: ControlSocket(tcp,'+str(ControlPort)+')\n'
+    def NewConfig(self,controlPort,Strategy,IpBanList,id):
+        self.Control = 'CONTROL :: ControlSocket(tcp,'+str(controlPort)+')\n'
         self.strategy_init(Strategy,IpBanList)
         config =self.basic+self.Ip_Classfier+self.port
-        return config
         # try:
         #     file = open('click_'+str(id)+'.click', 'w',encoding='UTF-8')
         #     file.write(config)
@@ -91,7 +93,9 @@ class ConfigWriter(object):
         # else:
         #     print('FILE WRITE SUCCESS')
         #     file.close()
+        return config
     '''        
+
     def ConfigDefine(self,conf,id):
         try:
             file = open('click_'+id+'.click','w')
@@ -106,5 +110,5 @@ class ConfigWriter(object):
 
 
 if __name__ == '__main__':
-    writer = ConfigWriter(22222,'192.168.3.128','192.168.3.129','192.168.3.255','ens34','00:0c:29:44:f4:4c')
-    writer.NewConfig(('smuf_attack','land_attack','red'),('10.1.1.2','10.1.1.3'),1124)
+    witer = ConfigWriter(22222,'192.168.3.128','192.168.3.129','192.168.3.255','ens34','00:0c:29:44:f4:4c')
+    witer.NewConfig(('smuf_attack','land_attack','red'),('10.1.1.2','10.1.1.3'),1124)

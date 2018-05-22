@@ -1,7 +1,8 @@
 import pymysql
 import socket
+from define import *
 
-DEBUG = True
+DEBUG = False
 
 class DataOperator(object):
     port = 0

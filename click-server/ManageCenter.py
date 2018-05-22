@@ -2,6 +2,7 @@ import backends
 import Click
 import time
 import threading
+from define import *
 
 
 class Center():
@@ -11,18 +12,13 @@ class Center():
     web_server = None
     current_strategy = None
     new_strategy = None
-    subnet = '192.168.2.0/24'
 
     def __init__(self):
         '''设置main click,创建click-server/web-server间的socket'''
         # 申请一个新的main计算资源
         # self.main_click = Click.Click('main_click','192.168.3.134',22222,33333)
-        sub_click = Click.Click(name='sub-click',con_ipaddr='192.168.2.129',listen_ipaddr='192.168.3.128',\
-            app_server_ip='192.168.2.132',listen_broadcast='192.168.3.255',listen_device='ens34',\
-            listen_ether='00:0c:29:44:f4:4c',controlPort=22222,dataPort=33333)
 
         self.backends = backends.Backends(self)
-        self.click_list.append(sub_click)
         pass
     def run(self):
         # threading.Thread(target=self.backends.run())
@@ -31,6 +27,7 @@ class Center():
 
     def Create_click(self):
         '''创建一个新的click,成功后向main click声明新增click的内网ip以负载均衡'''
+        '''涉及到自动化的一些东西'''
         # 通过何种方式获得新路由器的网络信息?
         # get_new_click()
         # name =
@@ -44,19 +41,20 @@ class Center():
         '''main click停止向被销毁的click转发,销毁一个click'''
         pass
 
-    def Change_config(self, configfile):
+    def Change_config(self):
         '''更改防御策略'''
         if self.current_strategy == 'user-define':
             # 这里好像比较难以自动化
             pass
         else:
             for click in self.click_list:
-                try:
-                    res = click.HotConfig()
-                except Exception as e:
-                    return click.name
+                res = click.ChangeConfig()
+
+            self.current_strategy = self.un_commit_strategy
             return 'SUCCESS'
-    def Create_config(self, strategy, name = 'sub_click'):
+
+    def Create_config(self, strategy):
+        self.un_commit_strategy = strategy
         for click in self.click_list:
             click.CreateConfig(strategy)
         return self.click_list[0].newconfig
@@ -72,4 +70,10 @@ class Center():
 
 if __name__ == '__main__':
     center = Center()
-    center.run()
+    sub_click = Click.Click(name='sub-click-1',con_ipaddr=SUB_CLICK_1_COM_IP,listen_ipaddr=SUB_CLICK_1_WORK_IP,\
+        app_server_ip=APP_SERVER_IP,listen_broadcast=SUB_CLICK_1_WORK_BROADCAST,listen_device=SUB_CLICK_1_WORK_DEVICE,\
+        listen_ether=SUB_CLICK_1_WORK_ETHER,net_controlPort=SUB_CLICK_1_COM_CONTROL_PORT,net_dataPort=SUB_CLICK_1_COM_DATA_PORT)
+    center.click_list.append(sub_click)
+    config = center.Create_config(['rst_attack'])
+    center.Change_config()
+    center.click_list[0].controller.WriteHandler('config')
