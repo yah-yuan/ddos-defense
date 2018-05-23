@@ -12,7 +12,7 @@ from define import *
 class ConfigWriter(object):
     def __init__(self,ControlPort,Ip,IpDst,IpBrodCast,GateWay,Mac):
     #basic
-        self.Out_default   = 'out :: Queue(1024) -> ToDevice(ens33)\n'
+        self.Out_default   = 'out :: Queue(1024) -> ToDevice('+GateWay+')\n'
         self.Out_red = 'out :: RED(768,1024,0.02)->Queue(1024) -> ToDevice('+GateWay+')\n'
         self.dropLog ='dropLog :: ToIPSummaryDump(/root/log/droplog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
         self.passLog ='passLog :: ToIPSummaryDump(/root/log/passlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
@@ -34,8 +34,6 @@ class ConfigWriter(object):
         self.echo_attack ='dst udp port 7 or 19,'
         self.smuf_attack ='dst '+IpBrodCast+' and icmp,'
         self.land_attack = 'dst '+Ip+' and src '+Ip+','
-
-
 
     # def ChangePort(self,newPort):
     #     self.Control = 'CONTROL :: ControlSocket(tcp,'+newPort+')\n'
