@@ -14,15 +14,15 @@ class ConfigWriter(object):
     #basic
         self.Out_default   = 'out :: Queue(1024) -> ToDevice(ens33)\n'
         self.Out_red = 'out :: RED(768,1024,0.02)->Queue(1024) -> ToDevice('+GateWay+')\n'
-        self.dropLog ='dropLog :: ToIPSummary Dump(/root/log/droplog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
-        self.passLog ='passLog :: ToIPSummary Dump(/root/log/passlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
+        self.dropLog ='dropLog :: ToIPSummaryDump(/root/log/droplog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
+        self.passLog ='passLog :: ToIPSummaryDump(/root/log/passlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
         self.Classifier ='FromDevice('+GateWay+')-> cl :: Classifier(12/0806 20/0001,12/0806 20/0002,12/0800)\n'
         self.arpr    ='-> arpr :: ARPResponder('+Ip+', '+Mac+')\n->out;\n'
         self.arpq    ='cl[1] -> [1]arpq :: ARPQuerier('+Ip+','+Mac+')\n->out;\n'
         self.Set_IPAddr ='SetIPAddress('+IpDst+')'
         self.Ip_strip = 'cl[2]->Strip(14)\n-> CheckIPHeader(CHECKSUM false)\n->DropBroadcasts\n->CheckLength(65535)\n'
         self.IpPrintR ='-> IPPrint("recv IP detail")\n'
-        self.IpRewriter ='->rw :: IPRewriter(pattern - - '+IpDst+' -0 0)\n'
+        self.IpRewriter ='rw :: IPRewriter(pattern - - '+IpDst+' -0 0)\n'
         self.DecIpTTL   ='-> dt :: DecIPTTL\n'
         self.IpFragment ='-> fr :: IPFragmenter(300)\n'
         self.IpPrintS   ='-> IPPrint("send IP detail")'
@@ -66,7 +66,7 @@ class ConfigWriter(object):
 
         port = ''
         for i in range(self.length):
-            port +='ic['+str(i)+']->dropLog->discard\n'
+            port +='ic['+str(i)+']->dropLog->Discard\n'
         port +='ic['+str(self.length)+']->'+self.IpRewriter+self.DecIpTTL+self.IpFragment+self.IpPrintS+'->passLog'+self.IpOut+'\n'
 
         if self.red_flag == 0:
