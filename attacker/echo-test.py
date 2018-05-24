@@ -5,10 +5,24 @@
 
 import sys, socket
 from struct import *
+import random
 
-RANDOM = True
+IP_RANDOM = True
+SRC_PORT_RANDOM = True
 ip_dest = '127.0.0.1'
 ip_source = '127.0.0.1'
+
+def ip_random():
+    ip = ''
+    for i in range(4):
+        num = random.randint(0,255)
+        ip += str(num)
+        if i != 3:
+            ip += '.'
+    return ip
+
+def port_random():
+    return random.randint(0,65535)
 
 def carry_around_add(a, b):
     c = a + b
@@ -21,15 +35,11 @@ def checksum(msg):
         s = carry_around_add(s, w)
     return ~s & 0xffff
 
-try:
-    s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_RAW)
-except socket.error,msg:
-    print 'Socket could not be created. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-    sys.exit()
 def udp_pack():
     # ip_source = '127.0.0.1' #本机IP
     # ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
-
+    if IP_RANDOM:
+        ip_source = ip_random()
     #填写ip header
     ip_ver = 4			# ipv4
     ip_ihl = 5			# Header Length =5, 表示无options部分
@@ -38,7 +48,7 @@ def udp_pack():
     ip_id = 22222			# fragment相关，随便写个
     ip_frag_offset = 0		# fragment相关
     ip_ttl = 255			# *nix下TTL一般是255
-    ip_protocol = socket.IPPROTO_UDP	# 表示后面接的是tcp数据
+    ip_protocol = socket.IPPROTO_UDP	# 表示后面接的是udp数据
     ip_checksum = 0			# left for kernel to fill
     ip_saddr = socket.inet_pton(socket.AF_INET, ip_source)	# 两边的ip地址
     ip_daddr = socket.inet_pton(socket.AF_INET, ip_dest)
@@ -48,9 +58,11 @@ def udp_pack():
     # 按上面描述的结构，构建ip header。
     ip_header = pack('!BBHHHBBH4s4s' , ip_ver_ihl, ip_dscp, ip_total_len, ip_id, ip_frag_offset, ip_ttl, ip_protocol, ip_checksum, ip_saddr, ip_daddr)
 
-
-    udp_sport = 19	# udp包src port
-    udp_dport = 8081		# udp dst port
+    if SRC_PORT_RANDOM:
+        udp_sport = port_random()
+    else:
+        udp_sport = 19	# udp包src port
+    udp_dport = 7		# udp dst port
     udp_checksum = 0	# udp cksum
     udp_length = 18		# udp包len
 
@@ -82,6 +94,13 @@ def udp_pack():
     # 最终的tcp/ip packet！
     packet = ip_header + udp_header + payload_data
     return packet
+
+try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_RAW)
+except socket.error,msg:
+    print 'Socket could not be created. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+    sys.exit()
+
 # 发送出去
 def send_pack(n):
     packet = udp_pack()

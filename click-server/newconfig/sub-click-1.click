@@ -11,8 +11,8 @@ cl[2]->Strip(14)
 -> CheckIPHeader(CHECKSUM false)
 ->CheckLength(65535)
 -> IPPrint("recv IP detail")
-->ic :: IPClassifier( src host 192.168.3.255 and icmp,-)
-ic[0]->dropLog->print("smuf_attack")->Discard
+->ic :: IPClassifier( -)
+ic[0]->dropLog->Print("echo_attck droped")->Discard
 ic[1]->rw :: IPAddrPairRewriter(pattern - 192.168.2.132 0 0)
 -> dt :: DecIPTTL
 -> fr :: IPFragmenter(300)
