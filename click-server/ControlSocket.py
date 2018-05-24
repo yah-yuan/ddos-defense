@@ -96,6 +96,7 @@ class ControlSocket(object):
         except Exception as e:
             raise ControlSocketError(e)
         recvMessage = self.con.recv(65535)
+        print(recvMessage.decode('utf8'))
         if CODE_HANDLER_ERR in recvMessage:
             raise ControlSocketError('Config file can not be initialized!')
         elif CODE_OK not in recvMessage:
