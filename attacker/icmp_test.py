@@ -8,6 +8,7 @@ from struct import *
 
 RANDOM = True
 ip_dest = '127.0.0.1'
+ip_source = '127.0.0.1'
 
 def ip_random():
     ip = ''
@@ -37,9 +38,7 @@ except socket.error , msg:
 def set_pack():
     if RANDOM:
         ip_source = ip_random()
-    else:
-        ip_source = '127.0.0.1' #本机IP
-    ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
+    # ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
 
     #填写ip header
     ip_ver = 4			# ipv4
@@ -107,8 +106,8 @@ def set_pack():
 # 发送出去
 
 def send(n):
+    packet = set_pack()
     for _ in range(n):
-        packet = set_pack()
         s.sendto(packet, (ip_dest, 0))
 
 if __name__ == '__main__':
