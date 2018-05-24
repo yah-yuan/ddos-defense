@@ -22,7 +22,7 @@ class ConfigWriter(object):
         self.Set_IPAddr ='SetIPAddress('+IpDst+')'
         self.Ip_strip = 'cl[2]->Strip(14)\n-> CheckIPHeader(CHECKSUM false)\n->CheckLength(65535)\n'
         self.IpPrintR ='-> IPPrint("recv IP detail")\n'
-        self.IpRewriter ='rw :: IPRewriter(pattern - - '+IpDst+' - 0 0)\n'
+        self.IpRewriter ='rw :: IPAddrPairRewriter(pattern - '+IpDst+' 0 0)\n'
         self.DecIpTTL   ='-> dt :: DecIPTTL\n'
         self.IpFragment ='-> fr :: IPFragmenter(300)\n'
         self.IpPrintS   ='-> IPPrint("send IP detail")'
@@ -33,12 +33,12 @@ class ConfigWriter(object):
         self.rst_attack  = 'rst,'
         self.echo_attack ='dst udp port 7 or 19,'
         self.smuf_attack ='src host '+IpBrodCast+' and icmp,'
-        self.land_attack = 'dst '+Ip+' and src '+Ip+','
+        self.land_attack = 'dst '+Ip+' and src '+Ip+' and syn,'
 
     # def ChangePort(self,newPort):
     #     self.Control = 'CONTROL :: ControlSocket(tcp,'+newPort+')\n'
 
-    def strategy_init(self,Strategy,IpBanList:list):
+    def strategy_init(self,Strategy:list,IpBanList:list):
         self.Strategy_build=''
         self.length =len(Strategy)+len(IpBanList)
         for i in Strategy:
@@ -61,10 +61,10 @@ class ConfigWriter(object):
 
         #IpClassfier
         self.Ip_Classfier = '->ic :: IPClassifier( '+self.Strategy_build+ '-)\n'
-
+        final_list = Strategy + IpBanList
         port = ''
         for i in range(self.length):
-            port +='ic['+str(i)+']->dropLog->Discard\n'
+            port +='ic['+str(i)+']->dropLog->print("'+final_list[i]+' droped")->Discard\n'
         port +='ic['+str(self.length)+']->'+self.IpRewriter+self.DecIpTTL+self.IpFragment+self.IpPrintS+'->passLog'+self.IpOut+'\n'
 
         if self.red_flag == 0:

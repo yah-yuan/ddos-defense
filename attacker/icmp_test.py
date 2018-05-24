@@ -60,7 +60,7 @@ def set_pack():
     ip_header = pack('!BBHHHBBH4s4s' , ip_ver_ihl, ip_dscp, ip_total_len, ip_id, ip_frag_offset, ip_ttl, ip_protocol, ip_checksum, ip_saddr, ip_daddr)
 
     # 回显请求的icmp包构造
-    icmp_type = 0
+    icmp_type = 8
     icmp_code = 0
     icmp_cksum = 0
 
