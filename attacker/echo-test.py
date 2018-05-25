@@ -14,7 +14,6 @@ ip_dest = '127.0.0.1'
 ip_source = '127.0.0.1'
 SEND_TIMES = 100000
 
-
 def ip_random():
     ip = ''
     for i in range(4):
@@ -110,6 +109,7 @@ def send_pack():
     modify_buff_size()
     packet = udp_pack()
     for _ in range(n):
+        packet = udp_pack()
         s.sendto(packet, (ip_dest, 0))
 
 if __name__ == '__main__':

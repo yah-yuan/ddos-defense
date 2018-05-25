@@ -64,7 +64,7 @@ class ConfigWriter(object):
         final_list = Strategy + IpBanList
         port = ''
         for i in range(self.length):
-            port +='ic['+str(i)+']->dropLog->Print("['+final_list[i]+' droped]")->Discard\n'
+            port +='ic['+str(i)+']->dropLog\n->Print("['+final_list[i]+' droped]")\n->Discard\n'
         port +='ic['+str(self.length)+']->'+self.IpRewriter+self.DecIpTTL+self.IpFragment+self.IpPrintS+'->passLog'+self.IpOut+'\n'
 
         if self.red_flag == 0:
