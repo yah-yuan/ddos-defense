@@ -36,8 +36,6 @@ except socket.error , msg:
     print 'Socket could not be created. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
     sys.exit()
 def icmp_pack():
-    if RANDOM:
-        ip_source = ip_random()
     # ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
 
     #填写ip header
