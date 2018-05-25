@@ -25,7 +25,7 @@ class ConfigWriter(object):
         self.IpRewriter ='rw :: IPAddrPairRewriter(pattern - '+IpDst+' 0 0)\n'
         self.DecIpTTL   ='-> dt :: DecIPTTL\n'
         self.IpFragment ='-> fr :: IPFragmenter(300)\n'
-        self.IpPrintS   ='-> IPPrint("send IP detail")'
+        self.IpPrintS   ='-> IPPrint("send IP detail")\n'
         self.IpOut      ='-> arpq;\n'
         self.red_flag =0
 
@@ -64,7 +64,7 @@ class ConfigWriter(object):
         final_list = Strategy + IpBanList
         port = ''
         for i in range(self.length):
-            port +='ic['+str(i)+']->dropLog->Print("'+final_list[i]+' droped")->Discard\n'
+            port +='ic['+str(i)+']->dropLog->Print("['+final_list[i]+' droped]")->Discard\n'
         port +='ic['+str(self.length)+']->'+self.IpRewriter+self.DecIpTTL+self.IpFragment+self.IpPrintS+'->passLog'+self.IpOut+'\n'
 
         if self.red_flag == 0:

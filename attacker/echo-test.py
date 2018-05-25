@@ -6,11 +6,14 @@
 import sys, socket
 from struct import *
 import random
+from header import *
 
 IP_RANDOM = True
 SRC_PORT_RANDOM = True
 ip_dest = '127.0.0.1'
 ip_source = '127.0.0.1'
+SEND_TIMES = 100000
+
 
 def ip_random():
     ip = ''
@@ -42,8 +45,8 @@ def udp_pack():
         ip_source = ip_random()
     #填写ip header
     ip_ver = 4			# ipv4
-    ip_ihl = 5			# Header Length =5, 表示无options部分
-    ip_dscp = 0			# 以前叫tos，现在叫dscp
+    ip_ihl = 5			# Himportader Length =5, 表示无options部分
+    ip_dscp = 0			# import前叫tos，现在叫dscp
     ip_total_len = 0		# left for kernel to fill
     ip_id = 22222			# fragment相关，随便写个
     ip_frag_offset = 0		# fragment相关
@@ -102,10 +105,12 @@ except socket.error,msg:
     sys.exit()
 
 # 发送出去
-def send_pack(n):
+def send_pack():
+    n = SEND_TIMES
+    modify_buff_size()
     packet = udp_pack()
     for _ in range(n):
         s.sendto(packet, (ip_dest, 0))
 
 if __name__ == '__main__':
-    send_pack(12)
+    send_pack()
