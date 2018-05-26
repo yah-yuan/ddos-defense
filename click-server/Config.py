@@ -103,14 +103,16 @@ class ConfigWriter(object):
         ###########################
         port +='ic['+str(self.length)+']\n'+ '->passLog\n'#+self.DecIpTTL+self.IpFragment+self.IpOut+'\n'
 
+        if not Strategy+IpBanList:
+            self.dropLog = ''
         if self.red_flag == 0:
-           basic =self.Control + self.Out_default  +  self.Classifier + self.arpr + self.arpq + self.IpRewriterDeclare + self.dropLog + self.passLog + self.Ip_strip
-           basic+=self.IpPrintR
-           self.basic = basic
+            basic =self.Control + self.Out_default  +  self.Classifier + self.arpr + self.arpq + self.IpRewriterDeclare + self.dropLog + self.passLog + self.Ip_strip
+            basic+=self.IpPrintR
+            self.basic = basic
         else:
-           basic = self.Control + self.Out_red + self.Classifier + self.arpr + self.arpq + self.IpRewriterDeclare + self.dropLog + self.passLog + self.Ip_strip
-           basic += self.IpPrintR
-           self.basic =basic
+            basic = self.Control + self.Out_red + self.Classifier + self.arpr + self.arpq + self.IpRewriterDeclare + self.dropLog + self.passLog + self.Ip_strip
+            basic += self.IpPrintR
+            self.basic =basic
 
         self.port = port
     '''添加了白名单(IpPassList),在学姐论文中看到好像队列的输入端口可以有多个，我是依据这一基础改的，具体的可以看一下队列元素'''

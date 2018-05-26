@@ -6,8 +6,8 @@ sub_click = Click.Click(name='sub-click-1',con_ipaddr=SUB_CLICK_1_COM_IP,listen_
     listen_ether=SUB_CLICK_1_WORK_ETHER,net_controlPort=SUB_CLICK_1_COM_CONTROL_PORT,net_dataPort=SUB_CLICK_1_COM_DATA_PORT)
 center.click_list.append(sub_click)
 # config = center.Create_config(['rst_attack'])
-config = center.Create_config(['echo_attack','smuf_attack','land_attack','rst_attack'],\
-blackList=['10.3.152.132','32.1.21.90'],whiteList=['231.213.20.12\24','98.123.21.54\24'])
+config = center.Create_config([],\
+blackList=[],whiteList=['231.213.20.12/24','98.123.21.54/24'])
 # config = center.Create_config(['smuf_attack'])
 # config = center.Create_config(['land_attack'])
 # config = center.Create_config(['red'])
