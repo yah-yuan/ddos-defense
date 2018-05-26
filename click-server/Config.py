@@ -79,7 +79,7 @@ class ConfigWriter(object):
         self.Pass_Classifier = '->ic_pass :: IPClassifier('+ippass+',-)\n'
         self.Pass_drop = 'ic_pass[1]\n->IPPrint("droped by IP-Pass_list")\n->dropLog\n'
         self.Pass_Classifier += '->IPPrint("[Pass through white list]")\n'
-        self.Ip_Classfier = 'ic :: IPClassifier( '+self.Strategy_build+ '-)\n'
+        self.Ip_Classfier = '->ic :: IPClassifier( '+self.Strategy_build+ '-)\n'
         final_list = IpPassList + Strategy + IpBanList
         port = ''
         i=0
