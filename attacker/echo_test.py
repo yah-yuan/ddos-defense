@@ -37,7 +37,8 @@ def checksum(msg):
         s = carry_around_add(s, w)
     return ~s & 0xffff
 
-def udp_pack():
+def udp_pack(ipsrc):
+    ip_source = ipsrc
     # ip_source = '127.0.0.1' #本机IP
     # ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
     if IP_RANDOM:

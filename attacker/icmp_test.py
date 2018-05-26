@@ -35,7 +35,8 @@ try:
 except socket.error , msg:
     print 'Socket could not be created. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
     sys.exit()
-def icmp_pack():
+def icmp_pack(ipsrc):
+    ip_source = ipsrc
     # ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
 
     #填写ip header
@@ -104,7 +105,7 @@ def icmp_pack():
 # 发送出去
 
 def send(n):
-    packet = icmp_pack()
+    packet = icmp_pack(ip_source)
     for _ in range(n):
         s.sendto(packet, (ip_dest, 0))
 

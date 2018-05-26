@@ -31,10 +31,10 @@ try:
 except socket.error , msg:
     print 'Socket could not be created. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
     sys.exit()
-def rst_pack():
+def rst_pack(ipsrc):
     # ip_source = '127.0.0.1' #本机IP
     # ip_dest = '127.0.0.1'	#也可以用域名：socket.gethostbyname('www.microsoft.com')
-
+    ip_source = ipsrc
     #填写ip header
     if IP_RANDOM:
         ip_source = ip_random()
@@ -119,10 +119,10 @@ def rst_pack():
 
 def send_packet():
     n = SEND_TIMES
-    packet = rst_pack()
+    packet = rst_pack(ip_source)
     for _ in range(n):
         if PACK_EVERY_TIME:
-            packet = rst_pack()
+            packet = rst_pack(ip_source)
         s.sendto(packet, (ip_dest, 0))
 
 if __name__ == '__main__':

@@ -30,7 +30,7 @@ class ConfigWriter(object):
         self.IpFragment ='->IPFragmenter(300)\n'
         ##################
         ############将iprewriter放在最前面保证复用
-        self.IpRewriterDeclare ='rw :: IPAddrPairRewriter(pattern - '+IpDst+' 0 0)\n' + self.DecIpTTL + self.IpFragment + self.IpOut
+        self.IpRewriterDeclare ='rw :: IPAddrPairRewriter(pattern - '+IpDst+' 0 0)\n'+ self.IpPrintS + self.DecIpTTL + self.IpFragment + self.IpOut
         self.IpRewriter ='->rw\n'
         #####################
         self.passLog += self.IpRewriter
@@ -78,7 +78,7 @@ class ConfigWriter(object):
         ############################
         if IpPassList:
             for i in range(len(IpPassList)):
-                port +='ic['+str(i)+']\n'+self.IpPrintS+'->Print("[WHITE LIST '+ final_list[i] + ' passed]")\n'+'->passLog\n'
+                port +='ic['+str(i)+']\n'+'->Print("[WHITE LIST '+ final_list[i] + ' passed]")\n'+'->passLog\n'
                 # port += 'ic[' + str(i) + ']->passLog\n->Print("[WHITE LIST ' + final_list[i] + ' passed]")\n->out\n'
         serial += i+1
         i = 0
@@ -92,7 +92,7 @@ class ConfigWriter(object):
         for i in range(self.length-len(IpPassList)-len(IpBanList)):
             port +='ic['+str(i+serial)+']'+'->Print("['+Strategy[i]+' droped]")\n'+ '->dropLog\n'
         ###########################
-        port +='ic['+str(self.length)+']\n'+self.IpPrintS+ '->passLog\n'#+self.DecIpTTL+self.IpFragment+self.IpOut+'\n'
+        port +='ic['+str(self.length)+']\n'+ '->passLog\n'#+self.DecIpTTL+self.IpFragment+self.IpOut+'\n'
 
         if self.red_flag == 0:
            basic =self.Control + self.Out_default  +  self.Classifier + self.arpr + self.arpq + self.IpRewriterDeclare + self.dropLog + self.passLog + self.Ip_strip

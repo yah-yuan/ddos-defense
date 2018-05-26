@@ -69,7 +69,6 @@ def icmp_pack(_ip_source):
     icmp_seq = 1
     icmp_data = 'sdfd'
 
-
     # 继续合并small fields
     # 没有要合并的东西
     # tcp_offset_reserv = (tcp_data_offset << 4)
