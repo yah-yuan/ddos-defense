@@ -53,10 +53,10 @@ class Center():
             self.current_strategy = self.un_commit_strategy
             return 'SUCCESS'
 
-    def Create_config(self, strategy):
+    def Create_config(self, strategy,blackList,whiteList):
         self.un_commit_strategy = strategy
         for click in self.click_list:
-            click.CreateConfig(strategy)
+            click.CreateConfig(strategy,blackList,whiteList)
         return self.click_list[0].newconfig
 
     def Check_Online(self):

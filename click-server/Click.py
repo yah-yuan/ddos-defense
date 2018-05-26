@@ -58,12 +58,12 @@ class Click(object):
         self.controller.Close()
         os.remove('')
 
-    def CreateConfig(self, strategy):
+    def CreateConfig(self, strategy, balackList, whiteList):
         if self.using_port == 0:
             controlPort = self.controlPort[1]
         else:
             controlPort = self.controlPort[0]
-        newconfig = self.writer.NewConfig(controlPort,strategy,[],self.name)
+        newconfig = self.writer.NewConfig(controlPort,strategy,balackList,whiteList,self.name)
         self.newconfig = newconfig
         file = open('./newconfig/'+self.name+'.click','w+')
         file.write(newconfig)
