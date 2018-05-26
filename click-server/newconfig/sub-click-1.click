@@ -18,20 +18,20 @@ cl[2]->Strip(14)
 -> CheckIPHeader(CHECKSUM false)
 ->CheckLength(65535)
 -> IPPrint("recv IP detail")
-->ic :: IPClassifier( src 231.213.20.12,src 98.123.21.54,src 10.3.152.132,src 32.1.21.90,dst udp port 7 or 19,src host 192.168.3.255 and icmp,-)
-ic[0]
-->Print("[WHITE LIST 231.213.20.12 passed]")
-->passLog
-ic[1]
-->Print("[WHITE LIST 98.123.21.54 passed]")
-->passLog
-ic[2]->Print("[BLACK LIST 10.3.152.132 droped]")
+->ic_pass :: IPClassifier(231.213.20.12 or 98.123.21.54)
+->IPPrint("Pass through white list")
+->ic :: IPClassifier( src 10.3.152.132,src 32.1.21.90,dst udp port 7 or 19,src host 192.168.3.255 and icmp,dst 192.168.3.128 and src 192.168.3.128 and syn,rst,-)
+ic[0]->Print("[BLACK LIST 10.3.152.132 droped]")
 ->dropLog
-ic[3]->Print("[BLACK LIST 32.1.21.90 droped]")
+ic[1]->Print("[BLACK LIST 32.1.21.90 droped]")
 ->dropLog
-ic[4]->Print("[echo_attack droped]")
+ic[2]->Print("[echo_attack droped]")
 ->dropLog
-ic[5]->Print("[smuf_attack droped]")
+ic[3]->Print("[smuf_attack droped]")
+->dropLog
+ic[4]->Print("[land_attack droped]")
+->dropLog
+ic[5]->Print("[rst_attack droped]")
 ->dropLog
 ic[6]
 ->passLog

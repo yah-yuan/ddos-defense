@@ -47,10 +47,10 @@ class ConfigWriter(object):
 
     def strategy_init(self,Strategy:list,IpBanList:list,IpPassList:list):
         self.Strategy_build=''
-        self.length =len(Strategy)+len(IpBanList)+len(IpPassList)
-        if IpPassList:
-            for i in IpPassList:
-                self.Strategy_build+='src '+i+','
+        self.length =len(Strategy)+len(IpBanList)
+        # if IpPassList:
+        #     for i in IpPassList:
+        #         self.Strategy_build+='src '+i+','
         if IpBanList:
             for i in IpBanList:
                 self.Strategy_build+='src '+i+','
@@ -70,18 +70,27 @@ class ConfigWriter(object):
                 print('STRATEGY ERROR')
 
         #IpClassfier
+        ippass = ''
+        if IpPassList:
+            for i in range(len(IpPassList)):
+                ippass += IpPassList[i]
+                if i < len(IpPassList)-1:
+                    ippass += ' or '
+        self.Pass_Classifier = '->ic_pass :: IPClassifier('+ippass+')\n'
+        self.Pass_Classifier += '->IPPrint("Pass through white list")\n'
         self.Ip_Classfier = '->ic :: IPClassifier( '+self.Strategy_build+ '-)\n'
         final_list = IpPassList + Strategy + IpBanList
         port = ''
         i=0
         serial = 0
+
         ############################
-        if IpPassList:
-            for i in range(len(IpPassList)):
-                port +='ic['+str(i)+']\n'+'->Print("[WHITE LIST '+ final_list[i] + ' passed]")\n'+'->passLog\n'
-                # port += 'ic[' + str(i) + ']->passLog\n->Print("[WHITE LIST ' + final_list[i] + ' passed]")\n->out\n'
-        serial += i+1
-        i = 0
+        # if IpPassList:
+        #     for i in range(len(IpPassList)):
+        #         port +='ic['+str(i)+']\n'+'->Print("[WHITE LIST '+ final_list[i] + ' passed]")\n'+'->passLog\n'
+        #         # port += 'ic[' + str(i) + ']->passLog\n->Print("[WHITE LIST ' + final_list[i] + ' passed]")\n->out\n'
+        # serial += i+1
+        # i = 0
         ###########################
         if IpBanList:
             for i in range(len(IpBanList)):
@@ -89,7 +98,7 @@ class ConfigWriter(object):
         serial += i+1
 
         ###########################
-        for i in range(self.length-len(IpPassList)-len(IpBanList)):
+        for i in range(len(Strategy)):
             port +='ic['+str(i+serial)+']'+'->Print("['+Strategy[i]+' droped]")\n'+ '->dropLog\n'
         ###########################
         port +='ic['+str(self.length)+']\n'+ '->passLog\n'#+self.DecIpTTL+self.IpFragment+self.IpOut+'\n'
@@ -108,7 +117,7 @@ class ConfigWriter(object):
     def NewConfig(self,controlPort,Strategy,IpBanList,IpPassList,id):
         self.Control = 'CONTROL :: ControlSocket(tcp,'+str(controlPort)+')\n'
         self.strategy_init(Strategy,IpBanList,IpPassList)
-        config =self.basic+self.Ip_Classfier+self.port
+        config =self.basic+self.Pass_Classifier+self.Ip_Classfier+self.port
         # try:
         #     file = open('click_'+str(id)+'.click', 'w',encoding='UTF-8')
         #     file.write(config)
