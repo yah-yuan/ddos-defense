@@ -13,7 +13,7 @@ class ConfigWriter(object):
     def __init__(self,ControlPort,Ip,IpDst,IpBrodCast,GateWay,Mac):
     #basic
         self.Out_default   = 'out :: Queue(1024) -> ToDevice('+GateWay+')\n'
-        self.Out_red = 'out :: RED(768,1024,0.02)->Queue(1024) -> ToDevice('+GateWay+')\n'
+        self.Out_red = 'out :: RED(0,1024,0.2)->Queue(1024) -> ToDevice('+GateWay+')\n'
         self.dropLog ='dropLog :: ToIPSummaryDump(/root/log/droplog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
         self.passLog ='passLog :: ToIPSummaryDump(/root/log/passlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
         self.Classifier ='FromDevice('+GateWay+')-> cl :: Classifier(12/0806 20/0001,12/0806 20/0002,12/0800)\n'
