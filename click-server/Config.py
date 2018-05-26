@@ -13,7 +13,8 @@ class ConfigWriter(object):
     def __init__(self,ControlPort,Ip,IpDst,IpBrodCast,GateWay,Mac):
     #basic
         self.Out_default   = 'out :: Queue(1024) -> ToDevice('+GateWay+')\n'
-        self.Out_red = 'out :: RED(0,1024,0.2)->Queue(1024) -> ToDevice('+GateWay+')\n'
+        self.Out_red = '''out :: RED(0,1024,0.2)->Queue(1024)->ToIPSummaryDump(/root/log/red_pass,CONTENTS timestamp ip_src ip_dst 
+                    ip_len ip_proto count)\n -> Queue(64) -> ToDevice('''+GateWay+')\n'
         self.dropLog ='dropLog :: ToIPSummaryDump(/root/log/droplog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
         self.passLog ='passLog :: ToIPSummaryDump(/root/log/passlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)\n'
         self.Classifier ='FromDevice('+GateWay+')-> cl :: Classifier(12/0806 20/0001,12/0806 20/0002,12/0800)\n'
@@ -76,9 +77,9 @@ class ConfigWriter(object):
                 ippass += IpPassList[i]
                 if i < len(IpPassList)-1:
                     ippass += ' or '
-        self.Pass_Classifier = '->ic_pass :: IPClassifier('+ippass+',-)\n'
-        self.Pass_drop = 'ic_pass[1]\n->IPPrint("droped by IP-Pass_list")\n->dropLog\n'
-        self.Pass_Classifier += '->IPPrint("[Pass through white list]")\n'
+            self.Pass_Classifier = '->ic_pass :: IPClassifier('+ippass+',-)\n'
+            self.Pass_drop = 'ic_pass[1]\n->IPPrint("droped by IP-Pass_list")\n->dropLog\n'
+            self.Pass_Classifier += '->IPPrint("[Pass through white list]")\n'
         self.Ip_Classfier = '->ic :: IPClassifier( '+self.Strategy_build+ '-)\n'
         final_list = IpPassList + Strategy + IpBanList
         port = ''
@@ -99,8 +100,13 @@ class ConfigWriter(object):
             serial += i+1
 
         ###########################
-        for i in range(len(Strategy)):
-            port +='ic['+str(i+serial)+']'+'->IPPrint("['+Strategy[i]+' droped]")\n'+ '->dropLog\n'
+        Strategy_len = len(Strategy)
+        if 'red' in Strategy:
+            Strategy_len -= 1
+            Strategy.remove('red')
+        if Strategy_len > 0:
+            for i in range(Strategy_len):
+                port +='ic['+str(i+serial)+']'+'->IPPrint("['+Strategy[i]+' droped]")\n'+ '->dropLog\n'
         ###########################
         port +='ic['+str(self.length)+']\n'+ '->passLog\n'#+self.DecIpTTL+self.IpFragment+self.IpOut+'\n'
 
@@ -120,7 +126,11 @@ class ConfigWriter(object):
     def NewConfig(self,controlPort,Strategy,IpBanList,IpPassList,id):
         self.Control = 'CONTROL :: ControlSocket(tcp,'+str(controlPort)+')\n'
         self.strategy_init(Strategy,IpBanList,IpPassList)
-        config =self.basic+self.Pass_Classifier+self.Ip_Classfier+self.Pass_drop+self.port
+        if IpPassList:
+            config =self.basic+self.Pass_Classifier+self.Ip_Classfier+self.Pass_drop+self.port
+        else:
+            config =self.basic+self.Ip_Classfier+self.port
+
         # try:
         #     file = open('click_'+str(id)+'.click', 'w',encoding='UTF-8')
         #     file.write(config)
