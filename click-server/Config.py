@@ -96,7 +96,7 @@ class ConfigWriter(object):
         if IpBanList:
             for i in range(len(IpBanList)):
                 port += 'ic[' + str(serial + i) + ']'+'->IPPrint("[BLACK LIST ' + IpBanList[i] + ' droped]")\n'+'->dropLog\n'
-        serial += i+1
+            serial += i+1
 
         ###########################
         for i in range(len(Strategy)):
