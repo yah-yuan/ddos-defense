@@ -10,14 +10,19 @@ rw :: IPAddrPairRewriter(pattern - 192.168.2.132 0 0)
 ->DecIPTTL
 ->IPFragmenter(300)
 -> arpq;
+dropLog :: ToIPSummaryDump(/root/log/droplog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)
+-> Discard
 passLog :: ToIPSummaryDump(/root/log/passlog,CONTENTS timestamp ip_src ip_dst ip_len ip_proto count)
 ->rw
 cl[2]->Strip(14)
 -> CheckIPHeader(CHECKSUM false)
 ->CheckLength(65535)
 -> IPPrint("recv IP detail")
-->ic_pass :: IPClassifier(231.213.20.12/24 or 98.123.21.54/24)
-->IPPrint("Pass through white list")
-->ic :: IPClassifier( -)
+->ic_pass :: IPClassifier(231.213.20.12/24 or 98.123.21.54/24,-)
+->IPPrint("[Pass through white list]")
+ic :: IPClassifier( -)
+ic_pass[1]
+->IPPrint("droped by IP-Pass_list")
+->dropLog
 ic[0]
 ->passLog

@@ -76,9 +76,10 @@ class ConfigWriter(object):
                 ippass += IpPassList[i]
                 if i < len(IpPassList)-1:
                     ippass += ' or '
-        self.Pass_Classifier = '->ic_pass :: IPClassifier('+ippass+')\n'
-        self.Pass_Classifier += '->IPPrint("Pass through white list")\n'
-        self.Ip_Classfier = '->ic :: IPClassifier( '+self.Strategy_build+ '-)\n'
+        self.Pass_Classifier = '->ic_pass :: IPClassifier('+ippass+',-)\n'
+        self.Pass_drop = 'ic_pass[1]\n->IPPrint("droped by IP-Pass_list")\n->dropLog\n'
+        self.Pass_Classifier += '->IPPrint("[Pass through white list]")\n'
+        self.Ip_Classfier = 'ic :: IPClassifier( '+self.Strategy_build+ '-)\n'
         final_list = IpPassList + Strategy + IpBanList
         port = ''
         i=0
@@ -94,16 +95,16 @@ class ConfigWriter(object):
         ###########################
         if IpBanList:
             for i in range(len(IpBanList)):
-                port += 'ic[' + str(serial + i) + ']'+'->Print("[BLACK LIST ' + IpBanList[i] + ' droped]")\n'+'->dropLog\n'
+                port += 'ic[' + str(serial + i) + ']'+'->IPPrint("[BLACK LIST ' + IpBanList[i] + ' droped]")\n'+'->dropLog\n'
         serial += i+1
 
         ###########################
         for i in range(len(Strategy)):
-            port +='ic['+str(i+serial)+']'+'->Print("['+Strategy[i]+' droped]")\n'+ '->dropLog\n'
+            port +='ic['+str(i+serial)+']'+'->IPPrint("['+Strategy[i]+' droped]")\n'+ '->dropLog\n'
         ###########################
         port +='ic['+str(self.length)+']\n'+ '->passLog\n'#+self.DecIpTTL+self.IpFragment+self.IpOut+'\n'
 
-        if not Strategy+IpBanList:
+        if not Strategy+IpBanList+IpPassList:
             self.dropLog = ''
         if self.red_flag == 0:
             basic =self.Control + self.Out_default  +  self.Classifier + self.arpr + self.arpq + self.IpRewriterDeclare + self.dropLog + self.passLog + self.Ip_strip
@@ -119,7 +120,7 @@ class ConfigWriter(object):
     def NewConfig(self,controlPort,Strategy,IpBanList,IpPassList,id):
         self.Control = 'CONTROL :: ControlSocket(tcp,'+str(controlPort)+')\n'
         self.strategy_init(Strategy,IpBanList,IpPassList)
-        config =self.basic+self.Pass_Classifier+self.Ip_Classfier+self.port
+        config =self.basic+self.Pass_Classifier+self.Ip_Classfier+self.Pass_drop+self.port
         # try:
         #     file = open('click_'+str(id)+'.click', 'w',encoding='UTF-8')
         #     file.write(config)
