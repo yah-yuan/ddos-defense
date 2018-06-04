@@ -3,53 +3,70 @@
   <head>
     <meta charset="UTF-8">
     <title>Control Center</title>
-    
-    <link href="flat-ui.css" rel="stylesheet">
+
     <script src="echarts.js"></script>
     <script src="macarons.js"></script>
+    <script src="renderer.js"></script>
     <link rel="stylesheet" type="text/css" href="index.css">
   </head>
   <body style="margin:0px; padding:0" >
+    <div id="delay" style="position: absolute; right: 5px; top:5px">
+      <div style="width: 10px; display:inline-block; height: 10px; background-color: green; border-radius: 5px"></div>
+      <span style="font-size: 10px"> 5ms </span>
+    </div>
     <div id="left_wrapper">
       <div id="button_list">
-        <button class="list_button btn btn-hg btn-primary" onclick="show_dashboard()">
-            Dashboard
+        <button class="left_button"  style = "background-color: #1abc9c" onclick="show_dashboard(this)">
+            系统状态
         </button>
             
-        <button class="list_button btn btn-hg btn-primary" onclick="show_source()"> 
-            Source 
+        <button class="left_button" onclick="show_source(this)"> 
+            流量来源 
         </button>
             
-        <button class="list_button btn btn-hg btn-primary" onclick="show_strategy()">
-            Strategy
+        <button class="left_button" onclick="show_strategy(this)">
+            策略管理
         </button>
 
-        <button class="list_button btn btn-hg btn-primary" onclick="show_click_manager()">
-            click
+        <button class="left_button" onclick="show_click_manager(this)" style="font-size:0.75em">
+            防御节点管理
         </button>
       </div>
     </div>
     <div id="right_wrapper" >
       <div id = "dashboard_view">
         <div id="current_status_wrapper">
-            <div id = "gauge">
-              <div id = "align" style="display:flex; align-items:baseline">
-                <span id = "current_speed" style="font-size:40px">15</span>
-                <span id = "current_speed_unit"style="font-size:15px">Mbps/s</span>
+            <div class = "gauge" id="gauge">
+              <div id = "align">
+                <div style="text-align: center">入口流量</div>
+                <span id = "current_speed" style="font-size:30px">15</span>
+                <span id = "current_speed_unit"style="font-size:15px">Mbps</span>
               </div>
             </div>
-            <div id = "info">
-              
+            <div class = "gauge" id="out">
+              <div style="">
+                <div style="text-align: center">出口流量</div>
+                <span style="font-size:30px" id="outspeed">0.9</span>
+                <span style="font-size:15px">Mbps</span>
+              </div>
+            </div>
+            <div class = "round">
+              <div style="text-align: center;font-size:18px">防御节点1</div>
+              <div style="text-align: center;font-size:15px">负载5.5Mbps</div>
+            </div>
+            <div class = "round">
+              <div style="text-align: center;font-size:18px">防御节点2</div>
+              <div style="text-align: center;font-size:15px">负载5.5Mbps</div>
             </div>
         </div>
         <div id="chart_wrapper">
             <div id="option">
-                <button class="mb">年</button>
-                <button class="mb">月</button>
-                <button class="mb">日</button>
-                <button class="mb">时</button>
-                <button class="mb">分</button>
-                <button class="mb">秒</button>
+                <button class="mb scale_g" onclick="onChangeScale(this)">年</button>
+                <button class="mb scale_g" onclick="onChangeScale(this)">月</button>
+                <button class="mb scale_g" onclick="onChangeScale(this)">日</button>
+                <button class="mb scale_g" onclick="onChangeScale(this)">时</button>
+                <button class="mb scale_g" onclick="onChangeScale(this)">分</button>
+                <button class="mb scale_g" onclick="onChangeScale(this)">秒</button>
               </div>
             <div id="chart" style="height:80%; width:100%;" ondblclick='chart_switch()'>
           </div>
@@ -58,14 +75,24 @@
       <div id="source_view">
           <div class="source_nav">
               <div id="search_bar">
-                <input id = "source_search" type="text" placeholder="search">
+                <input id = "source_search" type="text" placeholder="search" onchange="onSearchChange(this)">
                 <button class="cb">搜索</button>
               </div>
               <div id="view_style">
-                  <form style="width:80%;height:100%">
-                      <select id="view" onchange="change_view_style(this)">
-                      <option value="Form">Form</option>
-                      <option value="Pie">Pie</option>
+                  <form style="height:100%;">
+                      <select class="list" style="font-family: 'Microsoft YaHei'; font-size:15px">
+                        <option value="0">年</option>
+                        <option value="1">月</option>
+                        <option value="2">日</option>
+                        <option value="3">时</option>
+                        <option value="4">分</option>
+                        <option value="5" selected="selected">秒</option>
+                      </select>
+                  </form>
+                  <form style="height:100%;">
+                      <select id="view" onchange="change_view_style(this)" style="font-family: 'Microsoft YaHei'; font-size:15px">
+                        <option value="Form">表格</option>
+                        <option value="Pie">饼状图</option>
                       </select>
                   </form>
               </div>
@@ -75,115 +102,164 @@
             </div>
           </div>
           <div id="list_wrapper">
-            <div id="table_wrapper">
+            <div class="table_wrapper">
             <table border="0" cellspacing="0" cellpadding="0">
               <thead>
               <tr>
-                <th>Source</th>
-                <th>Type</th>
-                <th>Speed</th>
-                <th>strategy</th>
+                <th>来源</th>
+                <th>类型</th>
+                <th>流量</th>
+                <th>处理方式</th>
               </tr>
               </thead>
               <tbody>
               <tr>
-                  <td>210.42.121.241</td>
+                  <td>192.168.0.2</td>
                   <td>TCP</td>
-                  <td>5Mbps/s</td>
+                  <td>0.4Mbps</td>
+                  <td>accept</td>
+              </tr>
+              <tr>
+                  <td>192.168.0.5</td>
+                  <td>TCP</td>
+                  <td>0.2Mbps</td>
+                  <td>accept</td>
+              </tr>
+              <tr>
+                  <td>210.114.121.24</td>
+                  <td>UDP</td>
+                  <td>5Mbps</td>
                   <td>discard</td>
               </tr>
               <tr>
-                  <td>210.42.121.241</td>
-                  <td>TCP</td>
-                  <td>5Mbps/s</td>
+                  <td>10.14.121.11</td>
+                  <td>ICMP</td>
+                  <td>5Mbps</td>
                   <td>discard</td>
               </tr>
               <tr>
-                  <td>210.42.121.241</td>
-                  <td>TCP</td>
-                  <td>5Mbps/s</td>
-                  <td>discard</td>
-              </tr>
-              <tr>
-                  <td>210.42.121.241</td>
-                  <td>TCP</td>
-                  <td>5Mbps/s</td>
-                  <td>discard</td>
-              </tr>
-              <tr>
-                  <td>210.42.121.241</td>
-                  <td>TCP</td>
-                  <td>5Mbps/s</td>
+                  <td>10.42.121.211</td>
+                  <td>UDP</td>
+                  <td>5Mbps</td>
                   <td>discard</td>
               </tr>
               </tbody>
             </table>
             </div>
-            <div id="pagination">
+            <div class="pagination" style="visibility: hidden;">
               <ul>
-                <li class = "sp" onclick="onSwitchPage(this)"><</li>
+                <li class = "sp" onclick="onSwitchPage(this)" style="visibility: hidden;"><</li>
                 <span id="page_num">
                 <li onclick="onSwitchPage(this)" >1</li>
                 <li onclick="onSwitchPage(this)" >2</li>
                 </span>
                 <li class = "sp" onclick="onSwitchPage(this)">></li>
               </ul>
-              
             </div>
           </div>
         </div>
       <div id="strategy_view">
           <div class="source_nav">
-            <div style="height:100%;">
-              <div style="margin:0 10px 0 20px">
-                <span style="cursor: default;">当前策略</span>
-              </div>
-              <div style="position: relative;height:100%;margin:0px 10px 0px 10px" class="pull">
-                <span style="cursor: default;">default</span>
-                <div style="position: absolute;background-color: #34495e" class="pull_list">
-                  <div class="list_item">strategy1</div>
-                  <div class="list_item">strategy2</div>
-                  <div class="list_item">strategy3</div>
-                </div>
-              </div>
+            <div id="search_bar">
+              <input id = "source_search" type="text" placeholder="search" onclick="onSearchChange(this)" onfocus="onSearchBarFocus(this)" onblur="onSearchBarBlur(this)">
+              <button class="cb">搜索</button>
             </div>
             <div style="height: 100%; margin:0px 20px 0px 10px">
-              <span style="margin-right: 10px">编辑</span>
-              <span style="margin-left: 10px">保存</span>
+              <button class="cb b_edited" onclick="onEnableEdit()">编辑</button>
+              <button class="cb b_editing" style="display: none" onclick="onDisableEdit(this)">取消</button>
+              <button class="cb b_editing" style="display: none" onclick="onDisableEdit(this)">保存</button>
             </div>
           </div>
-          <div id="strategy editor" style="height:90%;width:90%">
+          <div id="strategy editor" style="height:90%;width:90%;display: none">
             <textarea type="text" style="height: 95%;width: 100%;padding: 0;resize:none;"></textarea>
+           
           </div>
-      </div>
-      <div id="click_manage_view">
-        <div class="source_nav">
-          <div>
-            <span>Add</span>
-          </div>
-        </div>
-        <div id="table_wrapper">
-            <table border="0" cellspacing="0" cellpadding="0">
+          <div class="table_wrapper" style="height:55%">
+            <table id="strategy_table" border="0" cellspacing="0" cellpadding="0">
               <thead>
               <tr>
-                <th>Num</th>
-                <th>Load</th>
-                <th>option</th>
+                <th style="width:10%">启用</th>
+                <th>策列名</th>
+                <th>策列描述</th>
               </tr>
               </thead>
               <tbody>
-              <tr>
-                  <td>1</td>
-                  <td>50%</td>
-                  <td>cancel</td>
+              <tr id='test_row_item1' value='0' onclick = "onClickStrategyItem(this)">
+                  <td ><input name="enable" type="checkbox" value="0" onchange="onChoose(this)" disabled="disabled"></td>
+                  <td>block tcp</td>
+                  <td>block tcp</td>
               </tr>
              
               </tbody>
             </table>
+        </div>
+        <div id="strategy_check" style="height:20%;width:90%;margin-top:20px;" draggable="true">
+          <textarea type="text" style="box-sizing:border-box; height: 100%;width: 100%;resize:none; outline: none; border: none; background-color: lightcyan;" readonly="readonly"></textarea>
+        </div>
+        <div class="pagination" id="s_p" style="display:none">
+          <ul>
+            <li class = "sp" onclick="onStrategySwitchPage(this)" value="l"><</li>
+            <span id="page_num">
+              <li onclick="onStrategySwitchPage(this)" value="1">1</li>
+              <li onclick="onStrategySwitchPage(this)" value="2">2</li>
+            </span>
+            <li class = "sp" onclick="onStrategySwitchPage(this)" value="n">></li>
+          </ul>
+        </div>
+      </div>
+      <div id="click_manage_view">
+        <div class="source_nav">
+          <div style="margin:0px 10px 0px 20px;height: 100%;">
+            <button class="cb">增加</button>
+            <button class="cb" style="">删除</button>
+          </div>
+          <div style="margin:0px 10px 0px 20px;height: 100%;">
+              <button class="cb">取消</button>
+              <button class="cb">保存</button>
             </div>
+        </div>
+        <div class="table_wrapper">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <thead>
+              <tr>
+                <th>编号</th>
+                <th>名称</th>
+                <th>负载</th>
+                <th>延迟</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr onclick="_focus(this)">
+                  <td>1</td>
+                  <td>防御节点1</td>
+                  <td>5.6Mbps</td>
+                  <td>1ms</td>
+              </tr>
+              <tr onclick="_focus(this)">
+                  <td>2</td>
+                  <td>防御节点2</td>
+                  <td>5.6Mbps</td>
+                  <td>3ms</td>
+              </tr>
+              <tr onclick="_focus(this)">
+                  <td>3</td>
+                  <td>防御节点3</td>
+                  <td>3.6Mbps</td>
+                  <td>2ms</td>
+              </tr>
+              
+              <tr onclick="_focus(this)" style="line-height: 40px;">
+                  <td>4</td>
+                  <td style="display: inline-flex; align-items: center"><input type="text" placeholder="请输入名称" style="display:inline-block;height: 90%;"></td>
+                  <td>创建中</td>
+                  <td>创建中</td>
+              </tr>
+              
+              </tbody>
+            </table>
+        </div>
       </div>
     </div>
-    
   </body>
   <script src="index.js"></script>
 </html>

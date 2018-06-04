@@ -3,6 +3,11 @@ html{
 }
 body{
     height: 100%;
+    font-size: 20px;
+    font-family: "Microsoft YaHei";
+}
+button{
+    font-family: "Microsoft YaHei";
 }
 table{
     border:none;
@@ -12,18 +17,30 @@ table{
 thead{
     background-color: #34495e;
     color: white;
-    font-size:30px;
+    font-size:20px;
+    line-height: 40px;
 }
+tbody>tr{
+    line-height:30px;
+}
+
+textarea{
+    padding: 5px 11px 5px 11px;
+}
+/*
 tbody>tr:hover{
     background-color: #1abc9c;
     color: white;
 }
+*/
 
 tbody{
     
 }
-
-#pagination li{
+.pagination ul{
+    padding: 0;
+}
+.pagination li{
     display:inline-flex;
     background-color: #34495e;
     color: white;
@@ -32,8 +49,10 @@ tbody{
     cursor: pointer;
     user-select: none;
     outline:none;
+    height: 25px;
+    line-height: 25px;
 }
-#pagination li:hover{
+.pagination li:hover{
     background-color: #44617e
 }
 
@@ -69,6 +88,17 @@ tbody{
     background-color: #2b3c4d;
 }
 
+.left_button{
+    width:100%;
+    margin:10px;
+    height:50px;
+    border:none;
+    font-size:1.25em;
+    outline: none;
+    color: white;
+    background-color: #19997f;
+    border-radius: 5px;
+}
 
 
 #source_search{
@@ -82,9 +112,7 @@ tbody{
     padding:0 0 0 20px;
     font-size:20px;
 }
-#source_search:focus{
-    background-color:#1abc9c;
-}
+
 
 #source_search::-webkit-input-placeholder{
     color:white;
@@ -93,12 +121,12 @@ tbody{
 }
 #search_bar{
     height:100%;
-    width:85%;
+    width:75%;
     display: inline-flex;
     align-items: center;
 }
 
-#table_wrapper{
+.table_wrapper{
     width:90%;
     height:85%;
     background-color:lightcyan;
@@ -110,7 +138,7 @@ tbody{
 #left_wrapper{
     float:left;
     height:100%;
-    width:20%;
+    width:18%;
     background-color:#34495e;
     display:flex;
     flex-direction: column;
@@ -120,7 +148,7 @@ tbody{
 #right_wrapper{
     float:right;
     height:100%;
-    width:80%;
+    width:82%;
     background-color: #D1EEEE;
     display:flex;
     flex-direction: column;
@@ -177,12 +205,19 @@ tbody{
     display: none;
 }
 
-.list_button{
-    width:100%;
+.round{
+    height: 120px;
+    width: 120px;
+    color: white;
+    background-color: #1abc9c;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    flex-direction: column;
     margin:10px;
 }
 
-#gauge{
+.gauge{
     height: 150px;
     width: 150px;
     color: white;
@@ -191,6 +226,7 @@ tbody{
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    margin:10px;
 }
 
 #chart_wrapper{
@@ -252,7 +288,16 @@ tbody{
     font-size: 20px;
     border:none;
     outline: none;
-    width:100px;
+   
+    height:100%;
+    background-color: #34495e;
+    color:white;
+}
+.list{
+    font-size: 20px;
+    border:none;
+    outline: none;
+   
     height:100%;
     background-color: #34495e;
     color:white;
@@ -273,6 +318,9 @@ tbody{
 .list_item{
     padding:5px 10px 5px 10px;
     cursor: pointer;
+}
+.pull:hover{
+    background-color: #23313f;
 }
 .pull:hover .pull_list{
     display: flex;
